@@ -8,6 +8,8 @@ services:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+    networks:
+      - diabeguide-net
     restart: unless-stopped
 
   backend:
@@ -19,11 +21,13 @@ services:
       - "5000:5000"
     environment:
       - PORT=5000
-      - MONGODB_URI=mongodb://database:27017/diabeguide
+      - MONGODB_URI=mongodb://diabeguide-db:27017/diabeguide
       - JWT_SECRET=super_secret_key_for_diabeguide_jwt
       - GEMINI_API_KEY=your_gemini_api_key_here
       - RESEND_API_KEY=re_Cwmw2n2X_M1bCGvXUt1mPpoxkKi1jjiiT
       - CHATBOT_PROVIDER=gemini
+    networks:
+      - diabeguide-net
     depends_on:
       - database
     restart: unless-stopped
@@ -35,9 +39,15 @@ services:
     container_name: diabeguide-frontend
     ports:
       - "5173:5173"
+    networks:
+      - diabeguide-net
     depends_on:
       - backend
     restart: unless-stopped
+
+networks:
+  diabeguide-net:
+    driver: bridge
 
 volumes:
   mongodb_data:
