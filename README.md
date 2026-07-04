@@ -228,6 +228,14 @@ The application currently uses mock data for demonstration purposes:
 
 ## Troubleshooting
 
+### Brave Browser - "Connection to local database server failed"
+**Issue**: Brave Shields automatically blocks port-to-port connections on `localhost` (e.g., from Vite's frontend port `5173` to the Express backend port `5000`), forcing the application into Offline Demo Mode.
+* **Solution**:
+  1. Open `http://localhost:5173` in Brave.
+  2. Click the orange **Lion head icon** (Brave Shields) in the right side of the address bar.
+  3. Toggle the Shields **OFF** for this site (the switch will change from purple to gray).
+  4. Refresh the page to connect cleanly to the local backend.
+
 ### Port Already in Use
 If you get a port conflict error, the dev server may already be running. Check for existing processes.
 
