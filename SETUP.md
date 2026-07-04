@@ -164,6 +164,16 @@ pnpm install
 2. Make sure `--host` flag is used
 3. Verify both devices on same network
 
+### Issue: Brave Browser - "Connection to local database server failed"
+
+**Cause**: Brave Shields automatically blocks port-to-port connections on `localhost` (e.g. from port `5173` to port `5000`), forcing the app into Offline Demo Mode.
+
+**Solution**:
+1. Open `http://localhost:5173` in Brave.
+2. Click the orange **Lion icon** (Brave Shields) in the address bar.
+3. Toggle the Shields **OFF** for this site (the switch will turn from purple to gray).
+4. Refresh the page to connect to your backend server.
+
 ## File Editing
 
 ### Live Reload
