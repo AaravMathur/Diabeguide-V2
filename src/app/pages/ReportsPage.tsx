@@ -65,6 +65,51 @@ export function ReportsPage() {
     toast.success("Health report exported as PDF successfully!");
   };
 
+  const handleExportExcel = async (reportTitle: string) => {
+    try {
+      const res = await api.readings.getAll();
+      const readingsList = res.readings || [];
+      
+      if (readingsList.length === 0) {
+        toast.error("No glucose logs found to export!");
+        return;
+      }
+      
+      // Build Excel CSV content
+      const headers = ["Date", "Time", "Meal Slot", "Time of Day", "Glucose Level (mg/dL)", "Status"];
+      const csvRows = [headers.join(",")];
+      
+      readingsList.forEach((r: any) => {
+        const val = r.level ?? r.value ?? 0;
+        const status = val < 70 ? "Low" : val > 130 ? "High" : "Normal";
+        const row = [
+          `"${r.date}"`,
+          `"${r.time}"`,
+          `"${r.meal.replace(/"/g, '""')}"`,
+          `"${r.timeOfDay}"`,
+          val,
+          `"${status}"`
+        ];
+        csvRows.push(row.join(","));
+      });
+      
+      const csvString = csvRows.join("\n");
+      const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `${reportTitle.toLowerCase().replace(/[^a-z0-9]+/g, "_")}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast.success(`${reportTitle} successfully downloaded as Excel/CSV!`);
+    } catch (err: any) {
+      toast.error("Failed to generate Excel download.");
+      console.error(err);
+    }
+  };
+
   return (
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -136,7 +181,16 @@ export function ReportsPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                 <XAxis dataKey="month" stroke="var(--muted-foreground)" />
                 <YAxis stroke="var(--muted-foreground)" />
-                <Tooltip />
+                <Tooltip 
+                  cursor={{ fill: "rgba(148, 163, 184, 0.08)" }}
+                  contentStyle={{ 
+                    backgroundColor: "var(--card)", 
+                    borderColor: "var(--border)", 
+                    borderRadius: "8px",
+                    color: "var(--foreground)",
+                    fontFamily: "Inter, sans-serif"
+                  }}
+                />
                 <Bar dataKey="average" fill="url(#colorGradient)" radius={[8, 8, 0, 0]} />
                 <defs>
                   <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
@@ -173,7 +227,15 @@ export function ReportsPage() {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: "var(--card)", 
+                      borderColor: "var(--border)", 
+                      borderRadius: "8px",
+                      color: "var(--foreground)",
+                      fontFamily: "Inter, sans-serif"
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
               <div className="space-y-4 w-full sm:w-auto">
@@ -210,25 +272,29 @@ export function ReportsPage() {
             ].map((report, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-gray-50 dark:bg-slate-900/60 border border-transparent dark:border-slate-800/60 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/80 transition"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
+                <div className="flex items-start sm:items-center gap-3 sm:gap-4">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center flex-shrink-0">
                     <FileText className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900">{report.title}</h4>
-                    <div className="flex items-center gap-3 text-sm text-gray-600">
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm sm:text-base">{report.title}</h4>
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-0.5">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         {report.date}
                       </span>
-                      <span>•</span>
+                      <span className="hidden sm:inline">•</span>
                       <span>{report.size}</span>
                     </div>
                   </div>
                 </div>
-                <Button variant="outline" onClick={handleExportPDF}>
+                <Button 
+                  variant="outline" 
+                  onClick={() => handleExportExcel(report.title)}
+                  className="w-full sm:w-auto flex items-center justify-center shrink-0 cursor-pointer dark:border-slate-700 dark:hover:bg-slate-800 dark:text-white"
+                >
                   <Download className="w-4 h-4 mr-2" />
                   Download
                 </Button>
