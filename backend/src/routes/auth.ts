@@ -62,10 +62,9 @@ router.post("/register-otp", async (req: Request, res: Response): Promise<void> 
       return;
     }
 
-    // Return response with convenience devOtp (for fallback/test ease)
+    // Return response
     res.status(200).json({
-      message: "OTP sent successfully to email",
-      devOtp: otpCode
+      message: "OTP sent successfully to email"
     });
   } catch (error) {
     console.error("Register OTP error:", error);
@@ -304,8 +303,7 @@ router.post("/forgot-password", async (req: Request, res: Response): Promise<voi
     }
 
     res.status(200).json({
-      message: "Reset code sent to email successfully",
-      devOtp: otpCode
+      message: "Reset code sent to email successfully"
     });
   } catch (error) {
     console.error("Forgot password error:", error);
