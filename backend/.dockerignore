@@ -1,0 +1,11 @@
+# Exclude node_modules from being copied into the backend container
+node_modules
+
+# Exclude compiled output
+dist
+
+# Exclude local env configuration
+.env
+
+# Logs
+*.log
