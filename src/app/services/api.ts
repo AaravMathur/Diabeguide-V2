@@ -5,6 +5,11 @@ const API_BASE_URL = "http://localhost:5000/api";
 // Track whether the app has switched to offline mock mode
 let useMockMode = localStorage.getItem("demo_mode") === "true";
 
+if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
+  useMockMode = false;
+  localStorage.removeItem("demo_mode");
+}
+
 const isNetworkError = (err: any) => {
   return err instanceof TypeError || err.message?.includes("Failed to fetch") || err.message?.includes("network error") || err.message?.includes("Load failed");
 };
