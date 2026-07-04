@@ -9,6 +9,7 @@ import { ChatbotPage } from "./pages/ChatbotPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { EmergencyPage } from "./pages/EmergencyPage";
 import { ReportsPage } from "./pages/ReportsPage";
+import { WelcomePage } from "./pages/WelcomePage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 const getBasename = (): string => {
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
   {
     path: "/signup",
     Component: SignupPage,
+  },
+  {
+    path: "/welcome",
+    Component: WelcomePage,
   },
   {
     path: "/dashboard",

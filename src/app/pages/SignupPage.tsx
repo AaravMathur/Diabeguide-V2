@@ -17,6 +17,8 @@ export function SignupPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otp, setOtp] = useState("");
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +27,7 @@ export function SignupPage() {
       return;
     }
     
+    setSendingOtp(true);
     try {
       const data = await api.auth.registerOtp(username, email, password);
       toast.success("OTP sent to your email!");
@@ -34,19 +37,23 @@ export function SignupPage() {
       setStep("otp");
     } catch (err: any) {
       toast.error(err.message || "Failed to register details");
+    } finally {
+      setSendingOtp(false);
     }
   };
 
   const handleVerifyOTP = async () => {
+    setVerifyingOtp(true);
     try {
       await api.auth.verifyOtp(email, otp);
       toast.success("Account verified successfully!");
       setStep("success");
       setTimeout(() => {
-        navigate("/dashboard");
+        navigate("/welcome");
       }, 2000);
     } catch (err: any) {
       toast.error(err.message || "OTP verification failed");
+      setVerifyingOtp(false);
     }
   };
 
@@ -128,8 +135,19 @@ export function SignupPage() {
                   className="bg-white"
                 />
               </div>
-              <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700">
-                Send OTP
+              <Button 
+                type="submit" 
+                disabled={sendingOtp} 
+                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {sendingOtp ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Sending OTP...
+                  </>
+                ) : (
+                  "Send OTP"
+                )}
               </Button>
             </form>
           )}
@@ -153,10 +171,17 @@ export function SignupPage() {
               </div>
               <Button
                 onClick={handleVerifyOTP}
-                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
-                disabled={otp.length !== 6}
+                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 flex items-center justify-center gap-2 cursor-pointer"
+                disabled={otp.length !== 6 || verifyingOtp}
               >
-                Verify OTP
+                {verifyingOtp ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Verifying...
+                  </>
+                ) : (
+                  "Verify OTP"
+                )}
               </Button>
               <Button variant="ghost" className="w-full" onClick={() => setStep("details")}>
                 Go Back
