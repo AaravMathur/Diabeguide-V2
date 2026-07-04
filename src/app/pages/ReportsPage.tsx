@@ -264,7 +264,7 @@ export function ReportsPage() {
       </div>
 
       {/* Detailed Reports */}
-      <Card>
+      <Card className="no-print">
         <CardHeader>
           <CardTitle>Generated Reports</CardTitle>
           <CardDescription>Download your detailed health reports</CardDescription>

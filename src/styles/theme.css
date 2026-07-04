@@ -399,12 +399,15 @@
 
 /* Print mode layout improvements for clean medical PDF reports */
 @media print {
-  /* Hide navigation, sidebar, filter buttons, header items, and export actions */
+  /* Hide navigation, sidebar, filter buttons, header items, toast popups, and export actions */
   nav,
   aside,
   header,
   button,
   .no-print,
+  [data-sonner-toaster],
+  [data-sonner-toast],
+  .sonner-toast,
   [role="combobox"],
   .SelectTrigger,
   .inline-flex,
