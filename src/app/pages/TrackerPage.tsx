@@ -6,7 +6,7 @@ import { Label } from "../components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Badge } from "../components/ui/badge";
 import { CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart, XAxis, YAxis } from "recharts";
-import { Plus, TrendingUp, Calendar, Clock } from "lucide-react";
+import { Plus, TrendingUp, Calendar, Clock, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../services/api";
 
@@ -66,6 +66,24 @@ export function TrackerPage() {
   useEffect(() => {
     fetchTrackerData();
   }, []);
+
+  const handleDeleteReading = async (id: string) => {
+    if (!id) return;
+    
+    // Simple custom style native confirm dialog
+    if (!window.confirm("Are you sure you want to delete this glucose reading?")) {
+      return;
+    }
+
+    try {
+      await api.readings.delete(id);
+      toast.success("Glucose reading deleted successfully!");
+      fetchTrackerData(); // Refresh analytics and history
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete reading");
+      console.error(err);
+    }
+  };
 
   const handleAddReading = async () => {
     if (!sugarLevel || !mealTime || !timeOfDay) {
@@ -290,15 +308,15 @@ export function TrackerPage() {
                 return (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
+                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-900/60 border border-transparent dark:border-slate-800/60 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800/80 transition"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center flex-shrink-0">
                         <span className="text-white font-bold">{glucoseVal}</span>
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900">{reading.meal}</p>
-                        <div className="flex items-center gap-3 text-sm text-gray-600">
+                        <p className="font-semibold text-gray-900 dark:text-white">{reading.meal}</p>
+                        <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
                             {reading.date}
@@ -310,15 +328,26 @@ export function TrackerPage() {
                         </div>
                       </div>
                     </div>
-                    <Badge
-                      className={
-                        glucoseVal >= 70 && glucoseVal <= 130
-                          ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-                          : "bg-amber-100 text-amber-700 hover:bg-amber-100"
-                      }
-                    >
-                      {glucoseVal >= 70 && glucoseVal <= 130 ? "Normal" : "Monitor"}
-                    </Badge>
+                    <div className="flex items-center gap-3">
+                      <Badge
+                        className={
+                          glucoseVal >= 70 && glucoseVal <= 130
+                            ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400"
+                            : "bg-amber-100 text-amber-700 hover:bg-amber-100 dark:bg-amber-950/40 dark:text-amber-400"
+                        }
+                      >
+                        {glucoseVal >= 70 && glucoseVal <= 130 ? "Normal" : "Monitor"}
+                      </Badge>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteReading(reading._id)}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-full h-8 w-8 cursor-pointer flex-shrink-0"
+                        title="Delete reading log"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 );
               })

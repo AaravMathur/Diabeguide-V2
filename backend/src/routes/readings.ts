@@ -343,4 +343,27 @@ router.get("/daily-trends", async (req: AuthRequest, res: Response): Promise<voi
   }
 });
 
+// 5. Delete glucose reading
+router.delete("/:id", async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const readingId = req.params.id;
+    const userId = req.user?.id;
+
+    const reading = await Reading.findOne({ _id: readingId, userId });
+    if (!reading) {
+      res.status(404).json({ message: "Reading not found or unauthorized" });
+      return;
+    }
+
+    await Reading.deleteOne({ _id: readingId, userId });
+
+    res.status(200).json({
+      message: "Reading deleted successfully"
+    });
+  } catch (error) {
+    console.error("Delete reading error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 export default router;

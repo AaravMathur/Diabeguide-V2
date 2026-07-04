@@ -535,6 +535,30 @@ export const api = {
         throw err;
       }
     },
+    delete: async (id: string) => {
+      if (useMockMode) {
+        const list = getLocalReadings();
+        const filtered = list.filter((r: any) => r._id !== id);
+        saveLocalReadings(filtered);
+        return { message: "Reading deleted successfully" };
+      }
+      try {
+        const response = await fetch(`${API_BASE_URL}/readings/${id}`, {
+          method: "DELETE",
+          headers: getHeaders(),
+        });
+        return await handleResponse(response);
+      } catch (err) {
+        if (isNetworkError(err)) {
+          triggerMockMode();
+          const list = getLocalReadings();
+          const filtered = list.filter((r: any) => r._id !== id);
+          saveLocalReadings(filtered);
+          return { message: "Reading deleted successfully" };
+        }
+        throw err;
+      }
+    },
   },
 
   // Chatbot Assistant API
