@@ -11,7 +11,19 @@ import { EmergencyPage } from "./pages/EmergencyPage";
 import { ReportsPage } from "./pages/ReportsPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
-const basename = window.location.pathname.startsWith("/DiabeGuide") ? "/DiabeGuide" : "/";
+const getBasename = (): string => {
+  const hostname = window.location.hostname;
+  const pathname = window.location.pathname;
+  if (hostname.includes("github.io")) {
+    const segments = pathname.split("/").filter(Boolean);
+    if (segments.length > 0) {
+      return `/${segments[0]}`;
+    }
+  }
+  return "/";
+};
+
+const basename = getBasename();
 
 export const router = createBrowserRouter([
   {
