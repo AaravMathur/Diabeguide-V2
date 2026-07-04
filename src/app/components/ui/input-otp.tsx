@@ -21,7 +21,7 @@ function InputOTP({
         containerClassName,
       )}
       className={cn(
-        "disabled:cursor-not-allowed absolute inset-0 w-full h-full opacity-0 bg-transparent border-0 outline-none ring-0 text-transparent selection:bg-transparent selection:text-transparent cursor-default",
+        "disabled:cursor-not-allowed !absolute !inset-0 !w-full !h-full !opacity-0 !bg-transparent !border-0 !outline-none !ring-0 !text-transparent !selection:bg-transparent !selection:text-transparent !cursor-default",
         className
       )}
       {...props}
