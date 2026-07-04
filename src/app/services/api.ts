@@ -31,7 +31,7 @@ const getHeaders = (isJson = true) => {
   if (isJson) {
     headers["Content-Type"] = "application/json";
   }
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
@@ -47,6 +47,8 @@ const handleResponse = async (response: Response) => {
     if (response.status === 401 || response.status === 410) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
       if (window.location.pathname !== "/login" && window.location.pathname !== "/signup" && window.location.pathname !== "/") {
         window.location.href = "/login";
       }
@@ -194,11 +196,12 @@ export const api = {
         throw err;
       }
     },
-    login: async (email: string, password: string) => {
+    login: async (email: string, password: string, rememberMe = true) => {
+      const storage = rememberMe ? localStorage : sessionStorage;
       if (useMockMode) {
         const user = { name: email.split("@")[0] || "Aarav", email, avatar: "", diabetesType: "Type 2", weight: 75, age: 35 };
-        localStorage.setItem("token", "demo-token-12345");
-        localStorage.setItem("user", JSON.stringify(user));
+        storage.setItem("token", "demo-token-12345");
+        storage.setItem("user", JSON.stringify(user));
         return { token: "demo-token-12345", user };
       }
       try {
@@ -209,16 +212,16 @@ export const api = {
         });
         const data = await handleResponse(response);
         if (data.token) {
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
+          storage.setItem("token", data.token);
+          storage.setItem("user", JSON.stringify(data.user));
         }
         return data;
       } catch (err) {
         if (isNetworkError(err)) {
           triggerMockMode();
           const user = { name: email.split("@")[0] || "Aarav", email, avatar: "", diabetesType: "Type 2", weight: 75, age: 35 };
-          localStorage.setItem("token", "demo-token-12345");
-          localStorage.setItem("user", JSON.stringify(user));
+          storage.setItem("token", "demo-token-12345");
+          storage.setItem("user", JSON.stringify(user));
           return { token: "demo-token-12345", user };
         }
         throw err;
@@ -227,12 +230,14 @@ export const api = {
     logout: () => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
       localStorage.removeItem("demo_mode");
       useMockMode = false;
     },
     getMe: async () => {
       if (useMockMode) {
-        const localUser = localStorage.getItem("user");
+        const localUser = localStorage.getItem("user") || sessionStorage.getItem("user");
         return { user: localUser ? JSON.parse(localUser) : { name: "Demo User", email: "demo@example.com" } };
       }
       try {
@@ -244,7 +249,7 @@ export const api = {
       } catch (err) {
         if (isNetworkError(err)) {
           triggerMockMode();
-          const localUser = localStorage.getItem("user");
+          const localUser = localStorage.getItem("user") || sessionStorage.getItem("user");
           return { user: localUser ? JSON.parse(localUser) : { name: "Demo User", email: "demo@example.com" } };
         }
         throw err;
@@ -252,10 +257,14 @@ export const api = {
     },
     updateProfile: async (profileData: any) => {
       if (useMockMode) {
-        const localUser = localStorage.getItem("user");
+        const localUser = localStorage.getItem("user") || sessionStorage.getItem("user");
         const user = localUser ? JSON.parse(localUser) : { name: "Demo User", email: "demo@example.com" };
         const updatedUser = { ...user, ...profileData };
-        localStorage.setItem("user", JSON.stringify(updatedUser));
+        if (localStorage.getItem("user")) {
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+        } else {
+          sessionStorage.setItem("user", JSON.stringify(updatedUser));
+        }
         return { user: updatedUser };
       }
       try {

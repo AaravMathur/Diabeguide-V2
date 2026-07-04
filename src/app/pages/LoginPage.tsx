@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
@@ -12,6 +12,26 @@ export function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
+
+  // Validate session on mount to ensure zero flickering or redirect loops
+  useEffect(() => {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) {
+      api.auth.getMe()
+        .then(() => {
+          navigate("/dashboard");
+        })
+        .catch(() => {
+          localStorage.removeItem("token");
+          sessionStorage.removeItem("token");
+          setIsCheckingSession(false);
+        });
+    } else {
+      setIsCheckingSession(false);
+    }
+  }, [navigate]);
 
   // Forgot password states
   const [isForgotOpen, setIsForgotOpen] = useState(false);
@@ -25,7 +45,7 @@ export function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.auth.login(email, password);
+      await api.auth.login(email, password, rememberMe);
       toast.success("Welcome back!");
       navigate("/dashboard");
     } catch (err: any) {
@@ -78,6 +98,17 @@ export function LoginPage() {
     }
   };
 
+  if (isCheckingSession) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          <p className="text-slate-400 text-sm font-medium">Verifying session...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-emerald-50 flex items-center justify-center p-6">
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNiIgc3Ryb2tlPSIjOTNjNWZkIiBzdHJva2Utd2lkdGg9IjIiIG9wYWNpdHk9Ii4xIi8+PC9nPjwvc3ZnPg==')] opacity-40"></div>
@@ -121,9 +152,14 @@ export function LoginPage() {
               />
             </div>
             <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="rounded" />
-                <span className="text-gray-600">Remember me</span>
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input 
+                  type="checkbox" 
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer" 
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
+                <span className="text-gray-600 dark:text-gray-400">Remember me</span>
               </label>
               <button 
                 type="button" 
