@@ -193,9 +193,10 @@ export function ReportsPage() {
                     backgroundColor: "var(--card)", 
                     borderColor: "var(--border)", 
                     borderRadius: "8px",
-                    color: "var(--foreground)",
                     fontFamily: "Inter, sans-serif"
                   }}
+                  itemStyle={{ color: "var(--foreground)" }}
+                  labelStyle={{ color: "var(--muted-foreground)" }}
                 />
                 <Bar dataKey="average" fill="url(#colorGradient)" radius={[8, 8, 0, 0]} />
                 <defs>
@@ -238,9 +239,9 @@ export function ReportsPage() {
                       backgroundColor: "var(--card)", 
                       borderColor: "var(--border)", 
                       borderRadius: "8px",
-                      color: "var(--foreground)",
                       fontFamily: "Inter, sans-serif"
                     }}
+                    itemStyle={{ color: "var(--foreground)" }}
                   />
                 </PieChart>
               </ResponsiveContainer>

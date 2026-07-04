@@ -190,10 +190,11 @@ export function DashboardHome() {
                       backgroundColor: "var(--card)", 
                       borderColor: "var(--border)", 
                       borderRadius: "8px",
-                      color: "var(--foreground)",
                       fontSize: isMobile ? "11px" : "13px",
                       fontFamily: "Inter, sans-serif"
                     }}
+                    itemStyle={{ color: "var(--foreground)" }}
+                    labelStyle={{ color: "var(--muted-foreground)" }}
                   />
                   <Legend 
                     verticalAlign="top" 
