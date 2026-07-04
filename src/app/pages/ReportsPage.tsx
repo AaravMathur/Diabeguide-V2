@@ -62,7 +62,13 @@ export function ReportsPage() {
   }, []);
 
   const handleExportPDF = () => {
-    toast.success("Health report exported as PDF successfully!");
+    toast.info("Generating your health report PDF... Please choose 'Save as PDF' in the destination options.", {
+      duration: 5000,
+      position: "top-center"
+    });
+    setTimeout(() => {
+      window.print();
+    }, 1000);
   };
 
   const handleExportExcel = async (reportTitle: string) => {

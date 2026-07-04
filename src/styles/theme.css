@@ -397,3 +397,57 @@
   background-color: rgba(37, 99, 235, 0.25) !important;
 }
 
+/* Print mode layout improvements for clean medical PDF reports */
+@media print {
+  /* Hide navigation, sidebar, filter buttons, header items, and export actions */
+  nav,
+  aside,
+  header,
+  button,
+  .no-print,
+  [role="combobox"],
+  .SelectTrigger,
+  .inline-flex,
+  .flex-col.sm\:flex-row.gap-3.w-full.sm\:w-auto {
+    display: none !important;
+  }
+  
+  /* Reset container layout and grid sizing */
+  body, 
+  main, 
+  #root {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+  
+  /* Grid formatting for printing */
+  .grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 15px !important;
+  }
+  
+  .lg\:grid-cols-2 > div,
+  .grid-cols-2 {
+    grid-column: span 2 !important;
+  }
+
+  /* Card layout formatting */
+  .card, .Card {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+    color: #000000 !important;
+    page-break-inside: avoid !important;
+  }
+  
+  /* Ensure charts and text labels print in solid black/gray for readability */
+  text {
+    fill: #0d1527 !important;
+  }
+}
+
+
