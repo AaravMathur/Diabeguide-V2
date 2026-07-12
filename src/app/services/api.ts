@@ -1,6 +1,18 @@
 import { toast } from "sonner";
 
-const API_BASE_URL = "http://localhost:5000/api";
+const getApiBaseUrl = (): string => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  const hostname = window.location.hostname;
+  if (hostname === "localhost" || hostname === "127.0.0.1") {
+    return "http://localhost:5000/api";
+  }
+  // Fallback production URL for Render deployment
+  return "https://diabeguide-backend.onrender.com/api";
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 // Track whether the app has switched to offline mock mode
 let useMockMode = localStorage.getItem("demo_mode") === "true";
