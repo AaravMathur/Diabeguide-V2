@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createHashRouter } from "react-router";
 import { LandingPage } from "./pages/LandingPage";
 import { LoginPage } from "./pages/LoginPage";
 import { SignupPage } from "./pages/SignupPage";
@@ -12,21 +12,7 @@ import { ReportsPage } from "./pages/ReportsPage";
 import { WelcomePage } from "./pages/WelcomePage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
-const getBasename = (): string => {
-  const hostname = window.location.hostname;
-  const pathname = window.location.pathname;
-  if (hostname.includes("github.io")) {
-    const segments = pathname.split("/").filter(Boolean);
-    if (segments.length > 0) {
-      return `/${segments[0]}`;
-    }
-  }
-  return "/";
-};
-
-const basename = getBasename();
-
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: "/",
     Component: LandingPage,
@@ -59,4 +45,4 @@ export const router = createBrowserRouter([
     path: "*",
     Component: NotFoundPage,
   },
-], { basename });
+]);
