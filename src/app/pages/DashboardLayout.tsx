@@ -1,6 +1,7 @@
 import { Outlet, useNavigate, useLocation, Link } from "react-router";
 import { Activity, LayoutDashboard, TrendingUp, MessageSquare, User, FileText, AlertCircle, LogOut, Bell, Menu, Sun, Moon, X } from "lucide-react";
 import { Button } from "../components/ui/button";
+import { Logo } from "../components/Logo";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { MobileNav } from "../components/MobileNav";
 import { useState, useEffect } from "react";
@@ -146,9 +147,7 @@ export function DashboardLayout() {
       <aside className="hidden md:flex w-64 bg-white border-r border-gray-200 flex-col">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
-              <Activity className="w-5 h-5 text-white" />
-            </div>
+            <Logo className="w-9 h-9" />
             <span className="font-bold text-xl text-gray-900">DiabeGuide</span>
           </div>
         </div>
@@ -201,9 +200,7 @@ export function DashboardLayout() {
           >
             <div className="flex items-center justify-between pb-6 border-b border-gray-200 dark:border-border">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
-                  <Activity className="w-4 h-4 text-white" />
-                </div>
+                <Logo className="w-7 h-7" />
                 <span className="font-bold text-lg text-gray-900 dark:text-foreground">DiabeGuide</span>
               </div>
               <Button 
@@ -271,9 +268,7 @@ export function DashboardLayout() {
               >
                 <Menu className="w-6 h-6" />
               </Button>
-              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
-                <Activity className="w-4 h-4 text-white" />
-              </div>
+              <Logo className="w-7 h-7" />
               <span className="font-bold text-lg text-gray-900 dark:text-foreground">DiabeGuide</span>
             </div>
 

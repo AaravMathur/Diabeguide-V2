@@ -4,7 +4,7 @@ import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Activity } from "lucide-react";
+import { Logo } from "../components/Logo";
 import { api } from "../services/api";
 import { toast } from "sonner";
 
@@ -116,8 +116,8 @@ export function LoginPage() {
       <Card className="w-full max-w-md relative backdrop-blur-sm bg-white/90 shadow-2xl border-blue-100">
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center">
-              <Activity className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-slate-900/50 flex items-center justify-center">
+              <Logo className="w-10 h-10" />
             </div>
           </div>
           <div>

@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Activity, Brain, LineChart, Shield, Sun, Moon } from "lucide-react";
+import { Logo } from "../components/Logo";
 import { useState, useEffect } from "react";
 
 export function LandingPage() {
@@ -29,7 +30,7 @@ export function LandingPage() {
         <div className="container mx-auto px-4 md:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Activity className="w-6 h-6 md:w-8 md:h-8 text-blue-600 dark:text-blue-400" />
+              <Logo className="w-6 h-6 md:w-8 md:h-8" />
               <span className="font-bold text-lg md:text-xl text-gray-900 dark:text-white">DiabeGuide</span>
             </div>
             <div className="hidden md:flex items-center gap-8">
@@ -134,7 +135,7 @@ export function LandingPage() {
         <div className="flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1 space-y-6 text-center md:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium">
-              <Activity className="w-4 h-4" /> About DiabeGuide
+              <Logo className="w-4 h-4" /> About DiabeGuide
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
               A Secure SaaS Platform Designed to Streamline Patient Health
@@ -236,7 +237,7 @@ export function LandingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Activity className="w-6 h-6 text-blue-400" />
+                <Logo className="w-6 h-6" />
                 <span className="font-bold text-lg">DiabeGuide</span>
               </div>
               <p className="text-gray-400">Smart diabetes management with AI</p>
