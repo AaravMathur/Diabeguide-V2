@@ -17,7 +17,7 @@ const API_BASE_URL = getApiBaseUrl();
 // Track whether the app has switched to offline mock mode
 let useMockMode = localStorage.getItem("demo_mode") === "true";
 
-if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
+if (typeof window !== "undefined") {
   useMockMode = false;
   localStorage.removeItem("demo_mode");
 }
