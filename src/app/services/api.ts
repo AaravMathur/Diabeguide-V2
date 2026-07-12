@@ -61,8 +61,8 @@ const handleResponse = async (response: Response) => {
       localStorage.removeItem("user");
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("user");
-      if (window.location.pathname !== "/login" && window.location.pathname !== "/signup" && window.location.pathname !== "/") {
-        window.location.href = "/login";
+      if (window.location.hash !== "#/login" && window.location.hash !== "#/signup" && window.location.hash !== "") {
+        window.location.hash = "/login";
       }
     }
     throw new Error(data?.message || "Something went wrong");
