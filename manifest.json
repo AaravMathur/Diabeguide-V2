@@ -1,0 +1,18 @@
+{
+  "short_name": "DiabeGuide",
+  "name": "DiabeGuide Health Suite",
+  "description": "Smart full-stack diabetes tracker and AI assistant",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "48x48 72x72 96x96 128x128 192x192 256x256 512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./",
+  "background_color": "#0f172a",
+  "theme_color": "#2563EB",
+  "display": "standalone",
+  "orientation": "portrait"
+}

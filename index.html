@@ -7,6 +7,8 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>DiabeGuide</title>
       <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+      <link rel="manifest" href="./manifest.json" />
+      <meta name="theme-color" content="#2563EB" />
       <meta name="description" content="Provides healthcare professionals with a SaaS platform featuring a chatbot, tracking tools, and user-friendly dashboards to streamline patient management." />
       <meta name="robots" content="noindex, nofollow" />
       <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
@@ -28,6 +30,15 @@
     <body>
       
       <div id="root"></div>
+      <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+              .then(reg => console.log('ServiceWorker registered:', reg.scope))
+              .catch(err => console.error('ServiceWorker registration failed:', err));
+          });
+        }
+      </script>
       
     </body>
   </html>
