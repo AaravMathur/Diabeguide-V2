@@ -17,17 +17,14 @@ services:
         sync: false
         placeholder: "Your MongoDB Atlas connection URI"
       - key: RESEND_API_KEY
-        sync: false
         value: "re_Cwmw2n2X_M1bCGvXUt1mPpoxkKi1jjiiT"
       - key: SMTP_SERVER
         value: "smtp.gmail.com"
       - key: SMTP_PORT
         value: "465"
       - key: SMTP_USERNAME
-        sync: false
         value: "aarav1mathur@gmail.com"
       - key: SMTP_PASSWORD
-        sync: false
         value: "xnjbiqokmbhekbtx"
       - key: CHATBOT_PROVIDER
         value: "gemini"
