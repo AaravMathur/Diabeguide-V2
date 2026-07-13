@@ -26,10 +26,10 @@ export function TrackerPage() {
 
   const [dailyTrends, setDailyTrends] = useState<any[]>([]);
   const [stats, setStats] = useState({
-    currentGlucose: 120,
-    currentStatus: "Normal",
-    weeklyAverage: 112,
-    inRangePercentage: 85,
+    currentGlucose: 0,
+    currentStatus: "No Data",
+    weeklyAverage: 0,
+    inRangePercentage: 0,
   });
   const [history, setHistory] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -92,7 +92,11 @@ export function TrackerPage() {
     }
 
     try {
-      const todayString = new Date().toISOString().split("T")[0];
+      const localDateForReading = new Date();
+      const yyyy = localDateForReading.getFullYear();
+      const mm = String(localDateForReading.getMonth() + 1).padStart(2, "0");
+      const dd = String(localDateForReading.getDate()).padStart(2, "0");
+      const todayString = `${yyyy}-${mm}-${dd}`;
       const nowTimeString = new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",

@@ -26,7 +26,16 @@ const isNetworkError = (err: any) => {
   return err instanceof TypeError || err.message?.includes("Failed to fetch") || err.message?.includes("network error") || err.message?.includes("Load failed");
 };
 
-const triggerMockMode = () => {
+const getLocalTodayString = (): string => {
+  const localDate = new Date();
+  const yyyy = localDate.getFullYear();
+  const mm = String(localDate.getMonth() + 1).padStart(2, "0");
+  const dd = String(localDate.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+};const triggerMockMode = () => {
+  if (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+    throw new Error("Unable to connect to the cloud database server. Please refresh or try again in a few seconds.");
+  }
   if (!useMockMode) {
     useMockMode = true;
     localStorage.setItem("demo_mode", "true");
@@ -36,7 +45,6 @@ const triggerMockMode = () => {
     });
   }
 };
-
 // Helper to get authorization headers
 const getHeaders = (isJson = true) => {
   const headers: Record<string, string> = {};
@@ -470,7 +478,8 @@ export const api = {
         };
       }
       try {
-        const response = await fetch(`${API_BASE_URL}/readings/stats`, {
+        const localDate = getLocalTodayString();
+        const response = await fetch(`${API_BASE_URL}/readings/stats?localDate=${localDate}`, {
           method: "GET",
           headers: getHeaders(),
         });
@@ -517,7 +526,8 @@ export const api = {
         return { weeklyTrends: trendData };
       }
       try {
-        const response = await fetch(`${API_BASE_URL}/readings/weekly-trends`, {
+        const localDate = getLocalTodayString();
+        const response = await fetch(`${API_BASE_URL}/readings/weekly-trends?localDate=${localDate}`, {
           method: "GET",
           headers: getHeaders(),
         });
@@ -533,7 +543,11 @@ export const api = {
     getDailyTrends: async () => {
       if (useMockMode) {
         const allReadings = getLocalReadings();
-        const todayStr = new Date().toISOString().split("T")[0];
+        const localDateObj = new Date();
+        const yyyy = localDateObj.getFullYear();
+        const mm = String(localDateObj.getMonth() + 1).padStart(2, "0");
+        const dd = String(localDateObj.getDate()).padStart(2, "0");
+        const todayStr = `${yyyy}-${mm}-${dd}`;
         const todayReadings = allReadings.filter(r => r.date === todayStr);
 
         const sorted = [...todayReadings].sort((a, b) => {
@@ -543,7 +557,8 @@ export const api = {
         return { dailyTrends: sorted };
       }
       try {
-        const response = await fetch(`${API_BASE_URL}/readings/daily-trends`, {
+        const localDate = getLocalTodayString();
+        const response = await fetch(`${API_BASE_URL}/readings/daily-trends?localDate=${localDate}`, {
           method: "GET",
           headers: getHeaders(),
         });

@@ -24,15 +24,15 @@ const aiSuggestions = [
 
 export function DashboardHome() {
   const [stats, setStats] = useState({
-    currentGlucose: 120,
-    currentStatus: "Normal",
-    changeMessage: "5 mg/dL from last reading",
-    weeklyAverage: 108,
-    weeklyStatus: "Excellent",
-    monthlyReadingsCount: 247,
-    readingsCountMessage: "8 readings per day average",
+    currentGlucose: 0,
+    currentStatus: "No Data",
+    changeMessage: "Add glucose readings to calculate trends",
+    weeklyAverage: 0,
+    weeklyStatus: "No Data",
+    monthlyReadingsCount: 0,
+    readingsCountMessage: "No logs recorded",
     targetRange: "70-130",
-    inRangePercentage: 85
+    inRangePercentage: 0
   });
 
   const [weeklyTrends, setWeeklyTrends] = useState<any[]>([]);

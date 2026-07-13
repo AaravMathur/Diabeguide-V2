@@ -7,8 +7,8 @@ const router = Router();
 // Apply auth middleware to all routes in this file
 router.use(authMiddleware);
 
-const getStartOfWeekDateString = (): string => {
-  const now = new Date();
+const getStartOfWeekDateString = (localDateStr?: string): string => {
+  const now = localDateStr ? new Date(localDateStr + "T00:00:00") : new Date();
   const day = now.getDay();
   // Adjust Monday as start of week (0 is Sunday, 1 is Monday... 6 is Saturday)
   const diff = now.getDate() - day + (day === 0 ? -6 : 1);
@@ -147,7 +147,8 @@ router.get("/stats", async (req: AuthRequest, res: Response): Promise<void> => {
     }
 
     // Filter readings for the current calendar week (starting Monday)
-    const mondayStr = getStartOfWeekDateString();
+    const localDate = req.query.localDate as string | undefined;
+    const mondayStr = getStartOfWeekDateString(localDate);
     const weeklyReadings = allReadings.filter(r => r.date >= mondayStr);
 
     let weeklyAverage = 0;
@@ -188,7 +189,8 @@ router.get("/stats", async (req: AuthRequest, res: Response): Promise<void> => {
 router.get("/weekly-trends", async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
-    const mondayStr = getStartOfWeekDateString();
+    const localDate = req.query.localDate as string | undefined;
+    const mondayStr = getStartOfWeekDateString(localDate);
     
     // Fetch only current calendar week's readings
     const readings = await Reading.find({ 
@@ -217,7 +219,8 @@ router.get("/weekly-trends", async (req: AuthRequest, res: Response): Promise<vo
 
     readings.forEach(r => {
       try {
-        const d = new Date(r.date);
+        const [year, month, day] = r.date.split("-").map(Number);
+        const d = new Date(year, month - 1, day);
         const dayName = days[d.getDay()];
         if (trendsMap[dayName]) {
           const tOfDay = r.timeOfDay.toLowerCase();
