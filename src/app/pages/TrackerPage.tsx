@@ -128,6 +128,48 @@ export function TrackerPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="space-y-4 md:space-y-6 animate-pulse">
+        <div>
+          <div className="h-8 w-48 bg-gray-200 dark:bg-slate-800 rounded-lg"></div>
+          <div className="h-4 w-64 bg-gray-200 dark:bg-slate-800 rounded-lg mt-2"></div>
+        </div>
+        <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
+          <Card className="lg:col-span-1 border-gray-100 dark:border-slate-800">
+            <CardHeader>
+              <div className="h-6 w-32 bg-gray-200 dark:bg-slate-800 rounded"></div>
+              <div className="h-4 w-48 bg-gray-200 dark:bg-slate-800 rounded mt-2"></div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="space-y-2">
+                  <div className="h-4 w-24 bg-gray-200 dark:bg-slate-800 rounded"></div>
+                  <div className="h-10 bg-gray-100 dark:bg-slate-800/50 rounded-lg"></div>
+                </div>
+              ))}
+              <div className="h-10 bg-gray-200 dark:bg-slate-800 rounded-lg w-full mt-4"></div>
+            </CardContent>
+          </Card>
+          <Card className="lg:col-span-2 border-gray-100 dark:border-slate-800">
+            <CardHeader>
+              <div className="h-6 w-48 bg-gray-200 dark:bg-slate-800 rounded"></div>
+              <div className="h-4 w-64 bg-gray-200 dark:bg-slate-800 rounded mt-2"></div>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[250px] bg-gray-100 dark:bg-slate-850 rounded-lg"></div>
+              <div className="grid grid-cols-3 gap-4 mt-6">
+                {[1, 2, 3].map((j) => (
+                  <div key={j} className="h-16 bg-gray-100 dark:bg-slate-850 rounded-lg"></div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4 md:space-y-6">
       <div>

@@ -66,6 +66,56 @@ export function DashboardHome() {
     fetchData();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="space-y-4 md:space-y-6 animate-pulse">
+        <div>
+          <div className="h-8 w-48 bg-gray-200 dark:bg-slate-800 rounded-lg"></div>
+          <div className="h-4 w-64 bg-gray-200 dark:bg-slate-800 rounded-lg mt-2"></div>
+        </div>
+        
+        {/* Stats Skeletons */}
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="border-gray-100 dark:border-slate-800">
+              <CardHeader>
+                <div className="h-4 w-32 bg-gray-200 dark:bg-slate-800 rounded"></div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="h-9 w-24 bg-gray-200 dark:bg-slate-800 rounded"></div>
+                <div className="h-5 w-16 bg-gray-200 dark:bg-slate-800 rounded-full"></div>
+                <div className="h-4 w-40 bg-gray-200 dark:bg-slate-800 rounded"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Charts & Suggestions Skeletons */}
+        <div className="grid lg:grid-cols-2 gap-6">
+          <Card className="border-gray-100 dark:border-slate-800">
+            <CardHeader>
+              <div className="h-6 w-48 bg-gray-200 dark:bg-slate-800 rounded"></div>
+              <div className="h-4 w-64 bg-gray-200 dark:bg-slate-800 rounded mt-2"></div>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[300px] bg-gray-100 dark:bg-slate-850 rounded-lg"></div>
+            </CardContent>
+          </Card>
+          <Card className="border-gray-100 dark:border-slate-800">
+            <CardHeader>
+              <div className="h-6 w-48 bg-gray-200 dark:bg-slate-800 rounded"></div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {[1, 2, 3].map((j) => (
+                <div key={j} className="h-12 bg-gray-100 dark:bg-slate-850 rounded-lg"></div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4 md:space-y-6">
       <div>
