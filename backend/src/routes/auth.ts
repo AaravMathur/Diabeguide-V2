@@ -112,7 +112,7 @@ router.post("/verify-otp", async (req: Request, res: Response): Promise<void> =>
     // Create JWT
     const secret = process.env.JWT_SECRET || "super_secret_key_for_diabeguide_jwt";
     const token = jwt.sign(
-      { id: user._id, email: user.email },
+      { id: user._id.toString(), email: user.email },
       secret,
       { expiresIn: "7d" }
     );
@@ -170,7 +170,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
     // Create JWT
     const secret = process.env.JWT_SECRET || "super_secret_key_for_diabeguide_jwt";
     const token = jwt.sign(
-      { id: user._id, email: user.email },
+      { id: user._id.toString(), email: user.email },
       secret,
       { expiresIn: "7d" }
     );
