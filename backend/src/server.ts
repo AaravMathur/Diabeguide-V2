@@ -43,12 +43,16 @@ app.get("/health", (req, res) => {
 
 // Start Server and Database Connection
 const startServer = async () => {
-  await connectDB();
-  app.listen(PORT, () => {
+  app.listen(Number(PORT), "0.0.0.0", () => {
     console.log(`=============================================`);
     console.log(`DiabeGuide API server running on port ${PORT}`);
-    console.log(`Health check: http://localhost:${PORT}/health`);
+    console.log(`Health check: http://0.0.0.0:${PORT}/health`);
     console.log(`=============================================`);
+  });
+
+  // Connect to DB asynchronously so port binds instantly on Render
+  connectDB().catch(err => {
+    console.error("Database connection background error:", err);
   });
 };
 
