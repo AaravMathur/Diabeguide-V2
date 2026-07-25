@@ -1,7 +1,13 @@
-import dotenv from "dotenv";
 import process from "node:process";
-// Load environment variables immediately
-dotenv.config();
+// Load environment variables immediately if dotenv is available
+try {
+  const dotenv = await import("dotenv");
+  if (dotenv && dotenv.default) {
+    dotenv.default.config();
+  }
+} catch (e) {
+  // Environment variables are injected directly by Render in production
+}
 
 import express from "express";
 import cors from "cors";
