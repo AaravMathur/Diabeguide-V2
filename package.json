@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "start": "node backend/dist/server.js",
+    "start": "cd backend && npm install --omit=dev && node dist/server.js",
     "predeploy": "pnpm run build",
     "build": "vite build",
     "dev": "concurrently \"vite\" \"pnpm --prefix backend run dev\""
@@ -91,11 +91,6 @@
     },
     "react-dom": {
       "optional": true
-    }
-  },
-  "pnpm": {
-    "overrides": {
-      "vite": "6.3.5"
     }
   }
 }
