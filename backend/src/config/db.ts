@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import process from "node:process";
 
 const DEFAULT_MONGO_URI = "mongodb+srv://aarav4mathur_db_user:uvWJ1J7MYt0Gm2lO@cluster0.ji5fwke.mongodb.net/diabeguide?retryWrites=true&w=majority";
 

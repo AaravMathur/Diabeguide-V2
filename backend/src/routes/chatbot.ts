@@ -1,4 +1,5 @@
 import { Router, Response, Request } from "express";
+import process from "node:process";
 import { ChatSession, IMessage } from "../models/ChatSession.js";
 import { authMiddleware, AuthRequest } from "../middleware/auth.js";
 import { Reading } from "../models/Reading.js";

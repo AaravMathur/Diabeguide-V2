@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import process from "node:process";
 
 // Helper to send email via Brevo's REST API (300 free emails/day over HTTPS)
 const sendViaBrevo = async (email: string, subject: string, htmlContent: string): Promise<boolean> => {
