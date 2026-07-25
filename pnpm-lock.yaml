@@ -201,6 +201,24 @@ importers:
 
   backend:
     dependencies:
+      '@types/bcryptjs':
+        specifier: ^2.4.6
+        version: 2.4.6
+      '@types/cors':
+        specifier: ^2.8.17
+        version: 2.8.19
+      '@types/express':
+        specifier: ^5.0.0
+        version: 5.0.6
+      '@types/jsonwebtoken':
+        specifier: ^9.0.8
+        version: 9.0.10
+      '@types/node':
+        specifier: ^22.13.4
+        version: 22.19.21
+      '@types/nodemailer':
+        specifier: ^6.4.17
+        version: 6.4.24
       bcryptjs:
         specifier: ^3.0.0
         version: 3.0.3
@@ -222,34 +240,16 @@ importers:
       nodemailer:
         specifier: ^9.0.1
         version: 9.0.1
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
     devDependencies:
-      '@types/bcryptjs':
-        specifier: ^2.4.6
-        version: 2.4.6
-      '@types/cors':
-        specifier: ^2.8.17
-        version: 2.8.19
-      '@types/express':
-        specifier: ^5.0.0
-        version: 5.0.6
-      '@types/jsonwebtoken':
-        specifier: ^9.0.8
-        version: 9.0.10
-      '@types/node':
-        specifier: ^22.13.4
-        version: 22.19.21
-      '@types/nodemailer':
-        specifier: ^6.4.17
-        version: 6.4.24
       ts-node-dev:
         specifier: ^2.0.0
         version: 2.0.0(@types/node@22.19.21)(typescript@5.9.3)
       tsx:
         specifier: ^4.22.4
         version: 4.22.4
-      typescript:
-        specifier: ^5.7.3
-        version: 5.9.3
 
 packages:
 

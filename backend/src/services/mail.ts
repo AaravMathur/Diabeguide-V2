@@ -1,5 +1,44 @@
 import nodemailer from "nodemailer";
 
+// Helper to send email via Brevo's REST API (300 free emails/day over HTTPS)
+const sendViaBrevo = async (email: string, subject: string, htmlContent: string): Promise<boolean> => {
+  const apiKey = process.env.BREVO_API_KEY;
+  if (!apiKey) return false;
+
+  const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_USERNAME || "aarav1mathur@gmail.com";
+  const senderName = "DiabeGuide Health Team";
+
+  try {
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "api-key": apiKey
+      },
+      body: JSON.stringify({
+        sender: { name: senderName, email: senderEmail },
+        to: [{ email: email }],
+        subject: subject,
+        htmlContent: htmlContent
+      })
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(`[Brevo Mail Dispatch] Email sent successfully (Message ID: ${data.messageId || data.id})`);
+      return true;
+    } else {
+      const errData = await response.json();
+      console.error("[Brevo Mail Error] API responded with error:", errData);
+      return false;
+    }
+  } catch (error) {
+    console.error("[Brevo Mail Error] Network or API fetch failed:", error);
+    return false;
+  }
+};
+
 // Helper to send email via Resend's REST API (Dependency-free using native fetch)
 const sendViaResend = async (email: string, subject: string, htmlContent: string): Promise<boolean> => {
   const apiKey = process.env.RESEND_API_KEY;
@@ -103,14 +142,21 @@ export const sendOTPEmail = async (email: string, otp: string): Promise<boolean>
     </div>
   `;
 
-  // 1. Try sending via Resend API first (if key exists)
+  // 1. Try sending via Brevo REST API first (300 free emails/day over HTTPS)
+  if (process.env.BREVO_API_KEY) {
+    const success = await sendViaBrevo(email, subject, htmlContent);
+    if (success) return true;
+    console.log("[Mail Dispatch] Brevo API failed. Attempting Resend fallback...");
+  }
+
+  // 2. Try sending via Resend API
   if (process.env.RESEND_API_KEY) {
     const success = await sendViaResend(email, subject, htmlContent);
     if (success) return true;
     console.log("[Mail Dispatch] Resend API failed. Attempting SMTP fallback...");
   }
 
-  // 2. Try sending via standard SMTP
+  // 3. Try sending via standard SMTP
   try {
     const success = await sendViaSMTP(email, subject, htmlContent);
     if (success) return true;
@@ -118,8 +164,8 @@ export const sendOTPEmail = async (email: string, otp: string): Promise<boolean>
     console.error("[Mail Dispatch Error] SMTP send failed:", error);
   }
 
-  // 3. Fallback to console logging if all delivery methods failed
-  console.log(`[Offline Mail Fallback] Both Resend and SMTP failed. Printing code to console.`);
+  // 4. Fallback to console logging if all delivery methods failed
+  console.log(`[Offline Mail Fallback] All email providers failed. Printing code to console.`);
   console.log(`[OTP Code Alert] Verification OTP for ${email} is: ${otp}`);
   return true;
 };
@@ -159,14 +205,21 @@ export const sendResetOTPEmail = async (email: string, otp: string): Promise<boo
     </div>
   `;
 
-  // 1. Try sending via Resend API first (if key exists)
+  // 1. Try sending via Brevo REST API first (300 free emails/day over HTTPS)
+  if (process.env.BREVO_API_KEY) {
+    const success = await sendViaBrevo(email, subject, htmlContent);
+    if (success) return true;
+    console.log("[Mail Dispatch] Brevo API failed. Attempting Resend fallback...");
+  }
+
+  // 2. Try sending via Resend API
   if (process.env.RESEND_API_KEY) {
     const success = await sendViaResend(email, subject, htmlContent);
     if (success) return true;
     console.log("[Mail Dispatch] Resend API failed. Attempting SMTP fallback...");
   }
 
-  // 2. Try sending via standard SMTP
+  // 3. Try sending via standard SMTP
   try {
     const success = await sendViaSMTP(email, subject, htmlContent);
     if (success) return true;
@@ -174,8 +227,8 @@ export const sendResetOTPEmail = async (email: string, otp: string): Promise<boo
     console.error("[Mail Dispatch Error] SMTP send failed:", error);
   }
 
-  // 3. Fallback to console logging if all delivery methods failed
-  console.log(`[Offline Mail Fallback] Both Resend and SMTP failed. Printing code to console.`);
+  // 4. Fallback to console logging if all delivery methods failed
+  console.log(`[Offline Mail Fallback] All email providers failed. Printing code to console.`);
   console.log(`[OTP Code Alert] Password Reset OTP for ${email} is: ${otp}`);
   return true;
 };
