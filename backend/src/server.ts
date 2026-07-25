@@ -41,12 +41,21 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", message: "DiabeGuide API server is running" });
 });
 
+const getPort = (): number => {
+  if (process.env.PORT) {
+    const parsed = parseInt(process.env.PORT, 10);
+    if (!isNaN(parsed) && parsed > 0) return parsed;
+  }
+  return 5000;
+};
+
 // Start Server and Database Connection
 const startServer = async () => {
-  app.listen(Number(PORT), "0.0.0.0", () => {
+  const portNum = getPort();
+  app.listen(portNum, "0.0.0.0", () => {
     console.log(`=============================================`);
-    console.log(`DiabeGuide API server running on port ${PORT}`);
-    console.log(`Health check: http://0.0.0.0:${PORT}/health`);
+    console.log(`DiabeGuide API server running on port ${portNum}`);
+    console.log(`Health check: http://0.0.0.0:${portNum}/health`);
     console.log(`=============================================`);
   });
 

@@ -15,9 +15,9 @@ COPY backend/ ./
 RUN npm run build
 
 ENV NODE_ENV=production
-ENV PORT=5000
 
 EXPOSE 5000
+EXPOSE 10000
 
 CMD ["node", "dist/server.js"]
 
