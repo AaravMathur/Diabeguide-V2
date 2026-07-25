@@ -4,9 +4,9 @@ node_modules/
 
 # Production build outputs
 dist/
-**/dist/
 build/
 out/
+!backend/dist/
 
 # Environment variables & local secrets
 .env
