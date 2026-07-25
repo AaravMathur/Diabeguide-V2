@@ -36,7 +36,11 @@ app.use("/api/readings", readingsRouter);
 app.use("/api/chatbot", chatbotRouter);
 app.use("/api/reports", reportsRouter);
 
-// Health check endpoint
+// Root & Health check endpoints for Render health checks
+app.get("/", (req, res) => {
+  res.status(200).json({ status: "ok", message: "DiabeGuide API server is running" });
+});
+
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", message: "DiabeGuide API server is running" });
 });
