@@ -5,8 +5,8 @@
   "main": "dist/server.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/server.js",
+    "build": "ncc build src/server.ts -o dist",
+    "start": "node dist/index.js",
     "dev": "tsx watch src/server.ts"
   },
   "dependencies": {
