@@ -116,6 +116,41 @@ export function ReportsPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="space-y-4 md:space-y-6 animate-pulse">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div className="h-8 w-48 bg-slate-200 dark:bg-slate-800 rounded-lg"></div>
+            <div className="h-4 w-64 bg-slate-200 dark:bg-slate-800 rounded-lg mt-2"></div>
+          </div>
+          <div className="h-10 w-36 bg-slate-200 dark:bg-slate-800 rounded-lg"></div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} className="p-4 space-y-3">
+              <div className="h-4 w-24 bg-slate-200 dark:bg-slate-800 rounded"></div>
+              <div className="h-8 w-20 bg-slate-200 dark:bg-slate-800 rounded"></div>
+              <div className="h-3 w-16 bg-slate-200 dark:bg-slate-800 rounded"></div>
+            </Card>
+          ))}
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-6">
+          <Card className="h-80 p-4 space-y-4">
+            <div className="h-5 w-40 bg-slate-200 dark:bg-slate-800 rounded"></div>
+            <div className="h-60 w-full bg-slate-100 dark:bg-slate-900 rounded-lg"></div>
+          </Card>
+          <Card className="h-80 p-4 space-y-4">
+            <div className="h-5 w-40 bg-slate-200 dark:bg-slate-800 rounded"></div>
+            <div className="h-60 w-full bg-slate-100 dark:bg-slate-900 rounded-lg"></div>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4 md:space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

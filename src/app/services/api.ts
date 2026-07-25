@@ -14,6 +14,26 @@ const getApiBaseUrl = (): string => {
 
 const API_BASE_URL = getApiBaseUrl();
 
+// Client-side cache store to prevent repeated loading skeletons on navigation
+const apiCache = new Map<string, { timestamp: number; data: any }>();
+const CACHE_TTL_MS = 3 * 60 * 1000; // 3 minutes cache lifetime
+
+export const getCachedData = (key: string): any | null => {
+  const cached = apiCache.get(key);
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+    return cached.data;
+  }
+  return null;
+};
+
+export const setCachedData = (key: string, data: any): void => {
+  apiCache.set(key, { timestamp: Date.now(), data });
+};
+
+export const clearApiCache = (): void => {
+  apiCache.clear();
+};
+
 // Track whether the app has switched to offline mock mode
 let useMockMode = localStorage.getItem("demo_mode") === "true";
 
@@ -32,7 +52,9 @@ const getLocalTodayString = (): string => {
   const mm = String(localDate.getMonth() + 1).padStart(2, "0");
   const dd = String(localDate.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
-};const triggerMockMode = () => {
+};
+
+const triggerMockMode = () => {
   if (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
     throw new Error("Unable to connect to the cloud database server. Please refresh or try again in a few seconds.");
   }

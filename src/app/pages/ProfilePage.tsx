@@ -11,16 +11,17 @@ import { api } from "../services/api";
 
 export function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState("John Doe");
-  const [email, setEmail] = useState("john@example.com");
-  const [phone, setPhone] = useState("+1 234 567 8900");
-  const [age, setAge] = useState("45");
-  const [weight, setWeight] = useState("75");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [age, setAge] = useState("");
+  const [weight, setWeight] = useState("");
   const [diabetesType, setDiabetesType] = useState("type2");
-  const [emergencyContact, setEmergencyContact] = useState("+1 234 567 8901");
-  const [healthScore, setHealthScore] = useState(85);
-  const [memberSince, setMemberSince] = useState("January 2026");
+  const [emergencyContact, setEmergencyContact] = useState("");
+  const [healthScore, setHealthScore] = useState(0);
+  const [memberSince, setMemberSince] = useState("");
   const [avatar, setAvatar] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -64,6 +65,8 @@ export function ProfilePage() {
         }
       } catch (err) {
         console.error("Failed to load user profile:", err);
+      } finally {
+        setLoading(false);
       }
     };
     loadProfile();
@@ -107,6 +110,45 @@ export function ProfilePage() {
     if (score >= 70) return "Good";
     return "Needs Attention";
   };
+
+  if (loading) {
+    return (
+      <div className="space-y-4 md:space-y-6 animate-pulse">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <div className="h-8 w-36 bg-slate-200 dark:bg-slate-800 rounded-lg"></div>
+            <div className="h-4 w-64 bg-slate-200 dark:bg-slate-800 rounded-lg mt-2"></div>
+          </div>
+          <div className="h-10 w-32 bg-slate-200 dark:bg-slate-800 rounded-lg"></div>
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
+          <Card className="lg:col-span-1 p-6 space-y-4 flex flex-col items-center">
+            <div className="w-32 h-32 rounded-full bg-slate-200 dark:bg-slate-800"></div>
+            <div className="h-6 w-32 bg-slate-200 dark:bg-slate-800 rounded"></div>
+            <div className="h-4 w-44 bg-slate-200 dark:bg-slate-800 rounded"></div>
+            <div className="w-full space-y-3 pt-4">
+              <div className="h-12 w-full bg-slate-100 dark:bg-slate-900 rounded-lg"></div>
+              <div className="h-12 w-full bg-slate-100 dark:bg-slate-900 rounded-lg"></div>
+              <div className="h-12 w-full bg-slate-100 dark:bg-slate-900 rounded-lg"></div>
+            </div>
+          </Card>
+
+          <Card className="lg:col-span-2 p-6 space-y-6">
+            <div className="h-6 w-48 bg-slate-200 dark:bg-slate-800 rounded"></div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="space-y-2">
+                  <div className="h-4 w-24 bg-slate-200 dark:bg-slate-800 rounded"></div>
+                  <div className="h-10 w-full bg-slate-100 dark:bg-slate-900 rounded-lg"></div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 md:space-y-6">

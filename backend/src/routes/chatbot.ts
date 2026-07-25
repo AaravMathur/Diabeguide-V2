@@ -97,24 +97,73 @@ const getFallbackAIResponse = (question: string, recentReadings: any[] = []): st
 
   let responseBody = "";
   
-  if (q.includes("eat") || q.includes("food") || q.includes("lunch") || q.includes("dinner") || q.includes("diet")) {
+  if (q.includes("lower") || q.includes("reduce") || q.includes("drop") || q.includes("bring down") || q.includes("control")) {
+    responseBody = `### Strategies to Lower & Control Blood Sugar\n` +
+      `Here are clinically proven steps to bring down high blood sugar safely:\n\n` +
+      `**Immediate Action Steps:**\n` +
+      `• **Drink 2-3 glasses of water**: Staying well-hydrated prompts your kidneys to excrete excess glucose through urine.\n` +
+      `• **15-Minute Post-Meal Walk**: Light aerobic movement causes skeletal muscles to absorb glucose directly from the bloodstream without requiring extra insulin.\n` +
+      `• **Avoid Simple Carbs Immediately**: Eliminate sodas, juices, white bread, pastries, and processed snacks.\n\n` +
+      `**Long-Term Control Tips:**\n` +
+      `• Increase soluble fiber (chia seeds, flaxseeds, oats, legumes) to slow down carb absorption.\n` +
+      `• Maintain consistent meal timings to avoid glucose spikes and crashes.`;
+  } else if (q.includes("normal") || q.includes("range") || q.includes("level") || q.includes("status") || q.includes("reading")) {
+    responseBody = `### Clinical Evaluation of Your Blood Sugar\n` +
+      `• Standard target range before meals is **70 – 130 mg/dL**.\n` +
+      `• Standard target range 2 hours after meals is **under 180 mg/dL**.\n\n` +
+      `**Status Summary:** Your latest logged reading is **${evaluation.value} mg/dL** (${evaluation.status.toUpperCase()}).\n\n` +
+      `**Recommendations for Your Level:**\n${personalizedDos}\n\n` +
+      `**Precautions:**\n${personalizedDonts}`;
+  } else if (q.includes("fasting") || q.includes("morning") || q.includes("woke up") || q.includes("wake up")) {
+    responseBody = `### Fasting & Morning Blood Glucose Support\n` +
+      `Normal fasting blood glucose (upon waking) for adults with diabetes is **80 – 130 mg/dL**.\n\n` +
+      `**Why morning sugar rises (Dawn Phenomenon):**\n` +
+      `Overnight, the liver releases stored glucose to prepare your body for waking. If insulin sensitivity is reduced, morning readings may spike.\n\n` +
+      `**Action Steps:**\n` +
+      `• Avoid eating high-carb snacks right before bed.\n` +
+      `• Try a small protein-rich bedtime snack (e.g. 10-12 almonds or 1 tbsp peanut butter) to stabilize overnight liver glucose output.\n` +
+      `• Drink a full glass of water first thing in the morning.`;
+  } else if (q.includes("a1c") || q.includes("hba1c") || q.includes("three month") || q.includes("avg")) {
+    responseBody = `### HbA1c (A1C) Guide & Targets\n` +
+      `Your A1C test measures your average blood glucose over the past **2 to 3 months**.\n\n` +
+      `**Target A1C Goals:**\n` +
+      `• **General Diabetes Target**: Under **7.0%** (corresponds to an average blood glucose around 154 mg/dL).\n` +
+      `• **Strict Target**: Under **6.5%** for early-stage or well-managed diabetes.\n\n` +
+      `**How to improve your A1C:**\n` +
+      `• Log readings at least 2-3 times daily to catch hidden spikes.\n` +
+      `• Focus on reducing post-meal glucose spikes through portion control and post-meal walks.`;
+  } else if (q.includes("symptom") || q.includes("dizzy") || q.includes("tired") || q.includes("fatigue") || q.includes("sweat") || q.includes("thirst")) {
+    responseBody = `### Diabetes Symptoms & Safety Awareness\n` +
+      `**Low Blood Sugar Symptoms (<70 mg/dL):** Shakiness, sweating, rapid heartbeat, dizziness, confusion, or irritability.\n` +
+      `*Action*: Consume 15g fast-acting sugar immediately.\n\n` +
+      `**High Blood Sugar Symptoms (>180 mg/dL):** Extreme thirst, frequent urination, fatigue, blurred vision, or headache.\n` +
+      `*Action*: Drink plenty of water and walk lightly.\n\n` +
+      `**When to seek urgent care:** If blood sugar remains over 250 mg/dL with nausea or ketones, contact your medical provider immediately.`;
+  } else if (q.includes("insulin") || q.includes("medicine") || q.includes("pill") || q.includes("metformin")) {
+    responseBody = `### Medication & Insulin Guidelines\n` +
+      `• **Always check blood sugar BEFORE administering rapid-acting insulin** to avoid unexpected severe low sugar.\n` +
+      `• **Take oral medications (like Metformin) as prescribed by your physician**, typically with meals to minimize stomach upset.\n` +
+      `• **Do NOT alter medication dosages on your own** based on single high or low logs without medical consultation.`;
+  } else if (q.includes("eat") || q.includes("food") || q.includes("lunch") || q.includes("dinner") || q.includes("diet") || q.includes("breakfast") || q.includes("fruit") || q.includes("rice")) {
     responseBody = `### Diet & Nutrition Advice\nGiven your glucose level is **${evaluation.status}**, here are meal guidelines:\n\n` +
       `**What you CAN do:**\n${personalizedDos}\n` +
-      `• Focus on lean proteins (grilled chicken, fish, tofu) and non-starchy vegetables.\n` +
-      `• Choose fiber-rich, low-GI foods like leafy greens, broccoli, oats, or chia seeds.\n\n` +
+      `• Focus on lean proteins (grilled chicken, fish, tofu) and non-starchy vegetables (spinach, broccoli, cucumbers).\n` +
+      `• Choose fiber-rich, low-GI foods like leafy greens, oats, quinoa, or chia seeds.\n\n` +
       `**What you CANNOT do:**\n${personalizedDonts}\n` +
-      `• Do not consume processed snacks, white bread, pastries, or sweet sodas.`;
-  } else if (q.includes("exercise") || q.includes("workout") || q.includes("activity") || q.includes("walk")) {
+      `• Do not consume processed snacks, white bread, pastries, sweet sodas, or large portions of white rice.`;
+  } else if (q.includes("exercise") || q.includes("workout") || q.includes("activity") || q.includes("walk") || q.includes("gym")) {
     responseBody = `### Physical Exercise Guidelines\nHere is how to manage physical movement at your glucose level:\n\n` +
       `**What you CAN do:**\n${personalizedDos}\n` +
       `• Brisk walking for 15-20 minutes after meals is highly recommended to lower post-meal spikes.\n\n` +
       `**What you CANNOT do:**\n${personalizedDonts}\n` +
       `• Do not execute intense workouts without checking your blood sugar levels and ensuring it is safe.`;
   } else {
-    // General evaluation question
-    responseBody = `### Health & Activity Advice\nHere are recommendations based on your logs:\n\n` +
-      `**Action Steps (What you CAN do):**\n${personalizedDos}\n\n` +
-      `**Precautions (What you CANNOT do):**\n${personalizedDonts}`;
+    // General comprehensive response tailored to question
+    responseBody = `### Personalized Health & Clinical Advice for "${question}"\n\n` +
+      `**Recommended Action Steps:**\n${personalizedDos}\n\n` +
+      `**Precautions & Things to Avoid:**\n${personalizedDonts}\n\n` +
+      `• **Hydration**: Drink 8-10 glasses of water daily to maintain renal filtration of excess sugar.\n` +
+      `• **Log Consistency**: Keep recording your logs before and after meals so we can track patterns over time.`;
   }
 
   return `${evaluation.text}\n\n${responseBody}\n\n*Critical Warning: Always confirm medical choices with your doctor or call 911 in case of emergency.*`;
