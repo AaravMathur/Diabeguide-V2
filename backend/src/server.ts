@@ -55,23 +55,12 @@ const getPort = (): number => {
 
 // Start Server and Database Connection
 const startServer = async () => {
-  const portNum = getPort();
-  const portsToListen = Array.from(new Set([portNum, 5000, 10000]));
-
-  portsToListen.forEach((p) => {
-    try {
-      const s = app.listen(p, "0.0.0.0", () => {
-        console.log(`=============================================`);
-        console.log(`[Server] DiabeGuide API listening on 0.0.0.0:${p}`);
-        console.log(`[Health Check] http://0.0.0.0:${p}/health`);
-        console.log(`=============================================`);
-      });
-      s.on("error", (err: any) => {
-        console.warn(`[Server Port Notice] Could not bind to port ${p}: ${err.message}`);
-      });
-    } catch (e) {
-      // Ignore bind errors for secondary ports
-    }
+  const PORT = getPort();
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`=============================================`);
+    console.log(`DiabeGuide API server running on port ${PORT}`);
+    console.log(`Health check: http://0.0.0.0:${PORT}/health`);
+    console.log(`=============================================`);
   });
 
   // Connect to DB asynchronously so port binds instantly on Render
