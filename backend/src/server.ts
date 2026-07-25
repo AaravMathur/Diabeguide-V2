@@ -52,20 +52,21 @@ const getPort = (): number => {
 // Start Server and Database Connection
 const startServer = async () => {
   const portNum = getPort();
-  const server = app.listen(portNum, "0.0.0.0", () => {
-    console.log(`=============================================`);
-    console.log(`DiabeGuide API server running on port ${portNum}`);
-    console.log(`Health check: http://0.0.0.0:${portNum}/health`);
-    console.log(`=============================================`);
-  });
+  const portsToListen = Array.from(new Set([portNum, 5000, 10000]));
 
-  server.on("error", (err: any) => {
-    console.error(`[Server Listen Error] Failed to bind to port ${portNum}:`, err);
-    if (portNum !== 10000) {
-      console.log(`[Server Fallback] Attempting fallback to port 10000...`);
-      app.listen(10000, "0.0.0.0", () => {
-        console.log(`[Server Fallback] DiabeGuide API server running on port 10000`);
+  portsToListen.forEach((p) => {
+    try {
+      const s = app.listen(p, "0.0.0.0", () => {
+        console.log(`=============================================`);
+        console.log(`[Server] DiabeGuide API listening on 0.0.0.0:${p}`);
+        console.log(`[Health Check] http://0.0.0.0:${p}/health`);
+        console.log(`=============================================`);
       });
+      s.on("error", (err: any) => {
+        console.warn(`[Server Port Notice] Could not bind to port ${p}: ${err.message}`);
+      });
+    } catch (e) {
+      // Ignore bind errors for secondary ports
     }
   });
 
