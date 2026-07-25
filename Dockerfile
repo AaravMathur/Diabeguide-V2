@@ -14,10 +14,7 @@ COPY backend/ ./
 # Compile TypeScript code to dist/
 RUN npm run build
 
-ENV PORT=5000
 ENV NODE_ENV=production
-
-EXPOSE 5000
 
 CMD ["node", "dist/server.js"]
 
