@@ -121,7 +121,7 @@ export const sendOTPEmail = async (email: string, otp: string): Promise<boolean>
       </div>
       
       <p style="font-size: 15px; line-height: 1.6; color: #475569; margin-bottom: 20px;">
-        Thank you for signing up for **DiabeGuide**! Use the verification code below to verify your email address. This code is valid for **10 minutes**.
+        Thank you for signing up for <strong>DiabeGuide</strong>! Use the verification code below to verify your email address. This code is valid for <strong>10 minutes</strong>.
       </p>
       
       <div style="text-align: center; margin: 30px 0;">
@@ -143,12 +143,10 @@ export const sendOTPEmail = async (email: string, otp: string): Promise<boolean>
     </div>
   `;
 
-  // 1. Try sending via Brevo REST API first (300 free emails/day over HTTPS)
-  if (process.env.BREVO_API_KEY) {
-    const success = await sendViaBrevo(email, subject, htmlContent);
-    if (success) return true;
-    console.log("[Mail Dispatch] Brevo API failed. Attempting Resend fallback...");
-  }
+  // 1. Try sending via Brevo REST API first (Instant delivery over HTTPS)
+  const brevoSuccess = await sendViaBrevo(email, subject, htmlContent);
+  if (brevoSuccess) return true;
+  console.log("[Mail Dispatch] Brevo API failed. Attempting Resend fallback...");
 
   // 2. Try sending via Resend API
   if (process.env.RESEND_API_KEY) {
@@ -184,7 +182,7 @@ export const sendResetOTPEmail = async (email: string, otp: string): Promise<boo
       </div>
       
       <p style="font-size: 15px; line-height: 1.6; color: #475569; margin-bottom: 20px;">
-        You are receiving this email because you requested a password reset for your **DiabeGuide** account. Use the code below to reset your password. This code is valid for **10 minutes**.
+        You are receiving this email because you requested a password reset for your <strong>DiabeGuide</strong> account. Use the code below to reset your password. This code is valid for <strong>10 minutes</strong>.
       </p>
       
       <div style="text-align: center; margin: 30px 0;">
@@ -206,12 +204,10 @@ export const sendResetOTPEmail = async (email: string, otp: string): Promise<boo
     </div>
   `;
 
-  // 1. Try sending via Brevo REST API first (300 free emails/day over HTTPS)
-  if (process.env.BREVO_API_KEY) {
-    const success = await sendViaBrevo(email, subject, htmlContent);
-    if (success) return true;
-    console.log("[Mail Dispatch] Brevo API failed. Attempting Resend fallback...");
-  }
+  // 1. Try sending via Brevo REST API first (Instant delivery over HTTPS)
+  const brevoSuccess = await sendViaBrevo(email, subject, htmlContent);
+  if (brevoSuccess) return true;
+  console.log("[Mail Dispatch] Brevo API failed. Attempting Resend fallback...");
 
   // 2. Try sending via Resend API
   if (process.env.RESEND_API_KEY) {
