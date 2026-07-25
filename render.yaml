@@ -4,7 +4,7 @@ services:
     env: node
     plan: free
     rootDir: backend
-    buildCommand: npm install
+    buildCommand: npm install --omit=dev=false
     startCommand: node dist/server.js
     envVars:
       - key: PORT
