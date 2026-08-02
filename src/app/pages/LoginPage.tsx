@@ -19,20 +19,7 @@ export function LoginPage() {
   useEffect(() => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     if (token) {
-      api.auth.getMe()
-        .then(() => {
-          navigate("/dashboard");
-        })
-        .catch((err) => {
-          // If it's a network error, keep the session and go to dashboard
-          if (err?.message && (err.message.includes("Unable to connect") || err.message.includes("fetch") || err.message.includes("network"))) {
-            navigate("/dashboard");
-          } else {
-            localStorage.removeItem("token");
-            sessionStorage.removeItem("token");
-            setIsCheckingSession(false);
-          }
-        });
+      navigate("/dashboard");
     } else {
       setIsCheckingSession(false);
     }

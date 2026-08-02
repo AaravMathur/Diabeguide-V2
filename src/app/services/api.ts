@@ -34,13 +34,14 @@ export const clearApiCache = (): void => {
   apiCache.clear();
 };
 
-// Track whether the app has switched to offline mock mode
-let useMockMode = localStorage.getItem("demo_mode") === "true";
+const isDemoToken = (): boolean => {
+  if (typeof window === "undefined") return false;
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  return token === "demo-token-12345";
+};
 
-if (typeof window !== "undefined") {
-  useMockMode = false;
-  localStorage.removeItem("demo_mode");
-}
+// Track whether the app has switched to offline mock mode
+let useMockMode = (typeof window !== "undefined" && localStorage.getItem("demo_mode") === "true") || isDemoToken();
 
 const isNetworkError = (err: any) => {
   return (
@@ -75,6 +76,7 @@ const getLocalTodayString = (): string => {
   const dd = String(localDate.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
 };
+
 // Helper to get authorization headers
 const getHeaders = (isJson = true) => {
   const headers: Record<string, string> = {};
@@ -94,7 +96,7 @@ const handleResponse = async (response: Response) => {
   const data = isJson ? await response.json() : null;
 
   if (!response.ok) {
-    if (response.status === 401 || response.status === 410) {
+    if ((response.status === 401 || response.status === 410) && !isDemoToken()) {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       sessionStorage.removeItem("token");
