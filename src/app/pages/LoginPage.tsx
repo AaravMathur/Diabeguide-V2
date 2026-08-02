@@ -59,7 +59,27 @@ export function LoginPage() {
     } catch (err: any) {
       clearTimeout(coldStartTimer);
       toast.dismiss();
-      toast.error(err.message || "Failed to sign in. Please try again.");
+      const msg = err.message || "";
+      if (msg.includes("Invalid credentials")) {
+        toast.error("Invalid email or password. Don't have an account? Click 'Sign up' below or use Instant Demo Login.");
+      } else {
+        toast.error(msg || "Failed to sign in. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setIsSubmitting(true);
+    try {
+      await api.auth.login("demo@diabeguide.com", "demopass123", rememberMe);
+      toast.dismiss();
+      toast.success("Logged in with Demo Account!");
+      navigate("/dashboard");
+    } catch (err: any) {
+      toast.dismiss();
+      toast.error("Failed to start demo session");
     } finally {
       setIsSubmitting(false);
     }
@@ -193,6 +213,19 @@ export function LoginPage() {
               ) : (
                 "Sign In"
               )}
+            </Button>
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200"></div></div>
+              <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-2 text-gray-500 font-medium">Or</span></div>
+            </div>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={handleDemoLogin} 
+              disabled={isSubmitting}
+              className="w-full border-blue-200 text-blue-600 hover:bg-blue-50/50 flex items-center justify-center gap-2 font-medium"
+            >
+              ⚡ Instant Demo Mode (1-Click Login)
             </Button>
           </form>
           <div className="mt-6 text-center text-sm text-gray-600">
