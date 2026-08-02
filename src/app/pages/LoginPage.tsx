@@ -53,10 +53,12 @@ export function LoginPage() {
     try {
       await api.auth.login(email, password, rememberMe);
       clearTimeout(coldStartTimer);
+      toast.dismiss();
       toast.success("Welcome back!");
       navigate("/dashboard");
     } catch (err: any) {
       clearTimeout(coldStartTimer);
+      toast.dismiss();
       toast.error(err.message || "Failed to sign in. Please try again.");
     } finally {
       setIsSubmitting(false);

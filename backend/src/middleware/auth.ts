@@ -8,6 +8,8 @@ export interface AuthRequest extends Request {
   };
 }
 
+export const JWT_SECRET = process.env.JWT_SECRET || "diabeguide_jwt_secret_key_2026_secure";
+
 export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
 
@@ -19,8 +21,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
   const token = authHeader.split(" ")[1];
 
   try {
-    const secret = process.env.JWT_SECRET || "super_secret_key_for_diabeguide_jwt";
-    const decoded = jwt.verify(token, secret) as { id: string; email: string };
+    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string };
     
     req.user = {
       id: decoded.id,

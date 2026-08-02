@@ -3,7 +3,7 @@ import process from "node:process";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
-import { authMiddleware, AuthRequest } from "../middleware/auth.js";
+import { authMiddleware, AuthRequest, JWT_SECRET } from "../middleware/auth.js";
 import { sendOTPEmail, sendResetOTPEmail } from "../services/mail.js";
 
 const router = Router();
@@ -111,10 +111,9 @@ router.post("/verify-otp", async (req: Request, res: Response): Promise<void> =>
     await user.save();
 
     // Create JWT
-    const secret = process.env.JWT_SECRET || "super_secret_key_for_diabeguide_jwt";
     const token = jwt.sign(
       { id: user._id.toString(), email: user.email },
-      secret,
+      JWT_SECRET,
       { expiresIn: "7d" }
     );
 
@@ -169,10 +168,9 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
     }
 
     // Create JWT
-    const secret = process.env.JWT_SECRET || "super_secret_key_for_diabeguide_jwt";
     const token = jwt.sign(
       { id: user._id.toString(), email: user.email },
-      secret,
+      JWT_SECRET,
       { expiresIn: "7d" }
     );
 
