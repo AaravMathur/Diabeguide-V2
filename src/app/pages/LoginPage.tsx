@@ -46,15 +46,33 @@ export function LoginPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [forgotStep, setForgotStep] = useState(1); // 1 = Request OTP, 2 = Verify & Reset
   const [forgotLoading, setForgotLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email.trim() || !password.trim()) {
+      toast.error("Please enter both email and password");
+      return;
+    }
+    setIsSubmitting(true);
+    
+    // Cold-start timer notice if server takes > 2.5s to respond
+    const coldStartTimer = setTimeout(() => {
+      toast.info("Connecting to server... Please wait a few seconds while database initializes.", {
+        duration: 8000
+      });
+    }, 2500);
+
     try {
       await api.auth.login(email, password, rememberMe);
+      clearTimeout(coldStartTimer);
       toast.success("Welcome back!");
       navigate("/dashboard");
     } catch (err: any) {
-      toast.error(err.message || "Failed to sign in");
+      clearTimeout(coldStartTimer);
+      toast.error(err.message || "Failed to sign in. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -177,8 +195,15 @@ export function LoginPage() {
                 Forgot password?
               </button>
             </div>
-            <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700">
-              Sign In
+            <Button type="submit" disabled={isSubmitting} className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700">
+              {isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  Signing in...
+                </span>
+              ) : (
+                "Sign In"
+              )}
             </Button>
           </form>
           <div className="mt-6 text-center text-sm text-gray-600">

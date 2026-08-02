@@ -43,7 +43,29 @@ if (typeof window !== "undefined") {
 }
 
 const isNetworkError = (err: any) => {
-  return err instanceof TypeError || err.message?.includes("Failed to fetch") || err.message?.includes("network error") || err.message?.includes("Load failed");
+  return (
+    err instanceof TypeError ||
+    err.message?.includes("Failed to fetch") ||
+    err.message?.includes("network error") ||
+    err.message?.includes("Load failed") ||
+    err.message?.includes("502") ||
+    err.message?.includes("503") ||
+    err.message?.includes("504") ||
+    err.message?.includes("Gateway") ||
+    err.message?.includes("Unavailable") ||
+    err.message?.includes("Unable to connect")
+  );
+};
+
+const triggerMockMode = () => {
+  if (!useMockMode) {
+    useMockMode = true;
+    localStorage.setItem("demo_mode", "true");
+    toast.info("Connecting via offline mode. Your logs are stored securely in your browser.", {
+      duration: 5000,
+      position: "top-center"
+    });
+  }
 };
 
 const getLocalTodayString = (): string => {
@@ -52,20 +74,6 @@ const getLocalTodayString = (): string => {
   const mm = String(localDate.getMonth() + 1).padStart(2, "0");
   const dd = String(localDate.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
-};
-
-const triggerMockMode = () => {
-  if (typeof window !== "undefined" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
-    throw new Error("Unable to connect to the cloud database server. Please refresh or try again in a few seconds.");
-  }
-  if (!useMockMode) {
-    useMockMode = true;
-    localStorage.setItem("demo_mode", "true");
-    toast.info("Connection to local database server failed. DiabeGuide has automatically switched to Offline Demo Mode! All your logs and chats are saved securely in your browser.", {
-      duration: 9000,
-      position: "top-center"
-    });
-  }
 };
 // Helper to get authorization headers
 const getHeaders = (isJson = true) => {
