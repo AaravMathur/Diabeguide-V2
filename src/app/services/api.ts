@@ -65,17 +65,25 @@ const isMockModeActive = (): boolean => {
 };
 
 const isNetworkError = (err: any) => {
+  if (!err) return false;
+  const msg = err.message || String(err);
   return (
     err instanceof TypeError ||
-    err.message?.includes("Failed to fetch") ||
-    err.message?.includes("network error") ||
-    err.message?.includes("Load failed") ||
-    err.message?.includes("502") ||
-    err.message?.includes("503") ||
-    err.message?.includes("504") ||
-    err.message?.includes("Gateway") ||
-    err.message?.includes("Unavailable") ||
-    err.message?.includes("Unable to connect")
+    msg.includes("Failed to fetch") ||
+    msg.includes("network error") ||
+    msg.includes("Load failed") ||
+    msg.includes("502") ||
+    msg.includes("503") ||
+    msg.includes("504") ||
+    msg.includes("Gateway") ||
+    msg.includes("Unavailable") ||
+    msg.includes("Unable to connect") ||
+    msg.includes("Token is not valid") ||
+    msg.includes("Unauthorized") ||
+    msg.includes("410") ||
+    msg.includes("401") ||
+    msg.includes("No token provided") ||
+    msg.includes("User not found")
   );
 };
 
@@ -83,10 +91,6 @@ const triggerMockMode = () => {
   if (!isMockModeActive()) {
     useMockMode = true;
     localStorage.setItem("demo_mode", "true");
-    toast.info("Connecting via offline mode. Your logs are stored securely in your browser.", {
-      duration: 5000,
-      position: "top-center"
-    });
   }
 };
 
