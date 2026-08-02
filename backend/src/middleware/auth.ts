@@ -18,7 +18,13 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
     return;
   }
 
-  const token = authHeader.split(" ")[1];
+  let token = authHeader.split(" ")[1];
+  if (token) {
+    token = token.trim();
+    if (token.startsWith('"') && token.endsWith('"')) {
+      token = token.slice(1, -1).trim();
+    }
+  }
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string };
@@ -29,8 +35,8 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
     };
     
     next();
-  } catch (error) {
-    console.error("JWT verification failed:", error);
+  } catch (error: any) {
+    console.error("[Auth Error] JWT verification failed:", error?.message);
     res.status(410).json({ message: "Token is not valid" });
   }
 };

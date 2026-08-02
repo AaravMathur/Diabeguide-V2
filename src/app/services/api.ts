@@ -34,9 +34,22 @@ export const clearApiCache = (): void => {
   apiCache.clear();
 };
 
+const getCleanToken = (): string | null => {
+  if (typeof window === "undefined") return null;
+  let token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  if (!token || token === "null" || token === "undefined") return null;
+  token = token.trim();
+  if (token.startsWith('"') && token.endsWith('"')) {
+    token = token.slice(1, -1).trim();
+  }
+  if (token.startsWith("Bearer ")) {
+    token = token.slice(7).trim();
+  }
+  return token || null;
+};
+
 const isDemoToken = (): boolean => {
-  if (typeof window === "undefined") return false;
-  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = getCleanToken();
   return token === "demo-token-12345";
 };
 
@@ -83,7 +96,7 @@ const getHeaders = (isJson = true) => {
   if (isJson) {
     headers["Content-Type"] = "application/json";
   }
-  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  const token = getCleanToken();
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
