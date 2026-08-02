@@ -101,7 +101,9 @@ const handleResponse = async (response: Response) => {
       localStorage.removeItem("user");
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("user");
+      clearApiCache();
       if (window.location.hash !== "#/login" && window.location.hash !== "#/signup" && window.location.hash !== "") {
+        toast.error("Your session has expired. Please sign in again.");
         window.location.hash = "/login";
       }
     }
@@ -249,6 +251,13 @@ export const api = {
       }
     },
     login: async (email: string, password: string, rememberMe = true) => {
+      // Clear any stale tokens and cache prior to signing in
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
+      clearApiCache();
+
       const storage = rememberMe ? localStorage : sessionStorage;
       if (useMockMode) {
         const user = { name: email.split("@")[0] || "Aarav", email, avatar: "", diabetesType: "Type 2", weight: 75, age: 35 };
