@@ -53,8 +53,16 @@ const isDemoToken = (): boolean => {
   return token === "demo-token-12345";
 };
 
-// Track whether the app has switched to offline mock mode
-let useMockMode = (typeof window !== "undefined" && localStorage.getItem("demo_mode") === "true") || isDemoToken();
+let useMockMode = false;
+
+const isMockModeActive = (): boolean => {
+  if (typeof window === "undefined") return false;
+  return (
+    useMockMode ||
+    localStorage.getItem("demo_mode") === "true" ||
+    isDemoToken()
+  );
+};
 
 const isNetworkError = (err: any) => {
   return (
@@ -72,7 +80,7 @@ const isNetworkError = (err: any) => {
 };
 
 const triggerMockMode = () => {
-  if (!useMockMode) {
+  if (!isMockModeActive()) {
     useMockMode = true;
     localStorage.setItem("demo_mode", "true");
     toast.info("Connecting via offline mode. Your logs are stored securely in your browser.", {
@@ -109,16 +117,8 @@ const handleResponse = async (response: Response) => {
   const data = isJson ? await response.json() : null;
 
   if (!response.ok) {
-    if ((response.status === 401 || response.status === 410) && !isDemoToken()) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      sessionStorage.removeItem("token");
-      sessionStorage.removeItem("user");
-      clearApiCache();
-      if (window.location.hash !== "#/login" && window.location.hash !== "#/signup" && window.location.hash !== "") {
-        toast.error("Your session has expired. Please sign in again.");
-        window.location.hash = "/login";
-      }
+    if (response.status === 401 || response.status === 410) {
+      triggerMockMode();
     }
     throw new Error(data?.message || "Something went wrong");
   }
@@ -262,6 +262,20 @@ export const api = {
         }
         throw err;
       }
+    },
+    loginDemo: async () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
+      clearApiCache();
+
+      useMockMode = true;
+      localStorage.setItem("demo_mode", "true");
+      const user = { name: "Aarav Mathur", email: "demo@diabeguide.com", avatar: "", diabetesType: "Type 2", weight: 75, age: 35 };
+      localStorage.setItem("token", "demo-token-12345");
+      localStorage.setItem("user", JSON.stringify(user));
+      return { token: "demo-token-12345", user };
     },
     login: async (email: string, password: string, rememberMe = true) => {
       // Clear any stale tokens and cache prior to signing in

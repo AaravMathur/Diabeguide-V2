@@ -73,9 +73,9 @@ export function LoginPage() {
   const handleDemoLogin = async () => {
     setIsSubmitting(true);
     try {
-      await api.auth.login("demo@diabeguide.com", "demopass123", rememberMe);
+      await api.auth.loginDemo();
       toast.dismiss();
-      toast.success("Logged in with Demo Account!");
+      toast.success("Welcome to Demo Mode!");
       navigate("/dashboard");
     } catch (err: any) {
       toast.dismiss();
