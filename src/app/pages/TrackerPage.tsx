@@ -44,18 +44,24 @@ export function TrackerPage() {
   const fetchTrackerData = async () => {
     try {
       const statsData = await api.readings.getStats();
-      setStats({
-        currentGlucose: statsData.currentGlucose,
-        currentStatus: statsData.currentStatus,
-        weeklyAverage: statsData.weeklyAverage,
-        inRangePercentage: statsData.inRangePercentage,
-      });
+      if (statsData && typeof statsData === "object") {
+        setStats({
+          currentGlucose: statsData.currentGlucose ?? 0,
+          currentStatus: statsData.currentStatus ?? "No Data",
+          weeklyAverage: statsData.weeklyAverage ?? 0,
+          inRangePercentage: statsData.inRangePercentage ?? 0,
+        });
+      }
 
       const dailyData = await api.readings.getDailyTrends();
-      setDailyTrends(dailyData.dailyTrends || []);
+      if (dailyData && typeof dailyData === "object") {
+        setDailyTrends(dailyData.dailyTrends || []);
+      }
 
       const listData = await api.readings.getAll();
-      setHistory(listData.readings || []);
+      if (listData && typeof listData === "object") {
+        setHistory(listData.readings || []);
+      }
     } catch (err: any) {
       console.error("Tracker page load error:", err);
     } finally {

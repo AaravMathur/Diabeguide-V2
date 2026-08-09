@@ -59,13 +59,13 @@ export function DashboardHome() {
 
         if (!isMounted) return;
 
-        if (statsRes.status === "fulfilled" && statsRes.value) {
-          setStats(statsRes.value);
+        if (statsRes.status === "fulfilled" && statsRes.value && typeof statsRes.value === "object") {
+          setStats(prev => ({ ...prev, ...statsRes.value }));
         }
-        if (trendsRes.status === "fulfilled" && trendsRes.value) {
+        if (trendsRes.status === "fulfilled" && trendsRes.value && typeof trendsRes.value === "object") {
           setWeeklyTrends(trendsRes.value.weeklyTrends || []);
         }
-        if (readingsRes.status === "fulfilled" && readingsRes.value) {
+        if (readingsRes.status === "fulfilled" && readingsRes.value && typeof readingsRes.value === "object") {
           setRecentReadings(readingsRes.value.readings || []);
         }
       } catch (err: any) {
