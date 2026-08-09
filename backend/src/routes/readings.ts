@@ -294,25 +294,24 @@ router.get("/daily-trends", async (req: AuthRequest, res: Response): Promise<voi
     const latestDate = allReadings[0].date;
     const latestReadings = allReadings.filter(r => r.date === latestDate);
 
-    // Group by standard slots for the chart
-    // Slots: 6 AM, 9 AM, 12 PM, 3 PM, 6 PM, 9 PM
+    // Group by standard slots for the chart covering 24 hours
     const slots = [
-      { time: "6 AM", hourMin: 5, hourMax: 8, values: [] as number[] },
-      { time: "9 AM", hourMin: 8, hourMax: 11, values: [] as number[] },
-      { time: "12 PM", hourMin: 11, hourMax: 14, values: [] as number[] },
-      { time: "3 PM", hourMin: 14, hourMax: 17, values: [] as number[] },
-      { time: "6 PM", hourMin: 17, hourMax: 20, values: [] as number[] },
-      { time: "9 PM", hourMin: 20, hourMax: 23, values: [] as number[] },
+      { time: "12 AM", hourMin: 0, hourMax: 5, values: [] as number[] },
+      { time: "6 AM", hourMin: 5, hourMax: 9, values: [] as number[] },
+      { time: "9 AM", hourMin: 9, hourMax: 12, values: [] as number[] },
+      { time: "12 PM", hourMin: 12, hourMax: 15, values: [] as number[] },
+      { time: "3 PM", hourMin: 15, hourMax: 18, values: [] as number[] },
+      { time: "6 PM", hourMin: 18, hourMax: 21, values: [] as number[] },
+      { time: "9 PM", hourMin: 21, hourMax: 24, values: [] as number[] },
     ];
 
     latestReadings.forEach(r => {
-      // Parse time. E.g. "08:30 AM" or "02:15 PM"
       try {
-        const parts = r.time.split(" ");
+        const parts = r.time.trim().split(" ");
         const timePart = parts[0];
         const ampm = parts[1]?.toLowerCase();
         
-        let [hours, minutes] = timePart.split(":").map(Number);
+        let [hours] = timePart.split(":").map(Number);
         if (ampm === "pm" && hours !== 12) hours += 12;
         if (ampm === "am" && hours === 12) hours = 0;
         
@@ -326,7 +325,7 @@ router.get("/daily-trends", async (req: AuthRequest, res: Response): Promise<voi
       }
     });
 
-    const dailyTrends = slots
+    let dailyTrends = slots
       .map(slot => {
         const avg = slot.values.length > 0
           ? Math.round(slot.values.reduce((sum, v) => sum + v, 0) / slot.values.length)
@@ -338,6 +337,14 @@ router.get("/daily-trends", async (req: AuthRequest, res: Response): Promise<voi
         };
       })
       .filter(slot => slot.value !== null);
+
+    // Fallback: If time parsing yielded no slot matches, map latest readings directly
+    if (dailyTrends.length === 0 && latestReadings.length > 0) {
+      dailyTrends = latestReadings.map(r => ({
+        time: r.time || "Log",
+        value: r.value
+      }));
+    }
 
     res.status(200).json({ dailyTrends, date: latestDate, isMock: false });
   } catch (error) {
