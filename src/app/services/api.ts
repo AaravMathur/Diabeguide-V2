@@ -12,12 +12,18 @@ const getApiBaseUrl = (): string => {
   if (/^(192\.168|10\.|172\.(1[6-9]|2[0-9]|3[0-1]))\./.test(hostname)) {
     return `http://${hostname}:5000/api`;
   }
-  // Cloudflare Tunnel access (*.trycloudflare.com)
-  if (hostname.endsWith(".trycloudflare.com")) {
+  // Cloud Tunnels & custom domains (ngrok, trycloudflare, loca.lt, etc.)
+  if (
+    hostname.endsWith(".ngrok-free.dev") ||
+    hostname.endsWith(".ngrok.io") ||
+    hostname.endsWith(".trycloudflare.com") ||
+    hostname.endsWith(".loca.lt") ||
+    hostname.endsWith(".serveo.net")
+  ) {
     return `${window.location.origin}/api`;
   }
-  // Fallback production URL for Render deployment (GitHub Pages)
-  return "https://diabeguide-backend.onrender.com/api";
+  // Fallback production URL
+  return `${window.location.origin}/api`;
 };
 
 const API_BASE_URL = getApiBaseUrl();
