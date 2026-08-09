@@ -236,8 +236,8 @@ router.put("/profile", authMiddleware, async (req: AuthRequest, res: Response): 
 
     if (name !== undefined) user.name = name;
     if (phone !== undefined) user.phone = phone;
-    if (age !== undefined) user.age = Number(age);
-    if (weight !== undefined) user.weight = Number(weight);
+    if (age !== undefined && !isNaN(Number(age)) && Number(age) > 0) user.age = Number(age);
+    if (weight !== undefined && !isNaN(Number(weight)) && Number(weight) > 0) user.weight = Number(weight);
     if (diabetesType !== undefined) user.diabetesType = diabetesType;
     if (emergencyContact !== undefined) user.emergencyContact = emergencyContact;
     if (avatar !== undefined) user.avatar = avatar;

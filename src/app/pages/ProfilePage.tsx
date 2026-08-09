@@ -75,15 +75,31 @@ export function ProfilePage() {
   // 2. Save edited profile details
   const handleSave = async () => {
     try {
-      await api.auth.updateProfile({
-        name,
-        phone,
-        age: Number(age),
-        weight: Number(weight),
+      const payload: any = {
+        name: name.trim(),
+        phone: phone.trim(),
         diabetesType,
-        emergencyContact,
+        emergencyContact: emergencyContact.trim(),
         avatar
-      });
+      };
+      if (age && !isNaN(Number(age))) payload.age = Number(age);
+      if (weight && !isNaN(Number(weight))) payload.weight = Number(weight);
+
+      const res = await api.auth.updateProfile(payload);
+
+      if (res && res.user) {
+        const u = res.user;
+        setName(u.name || "");
+        setEmail(u.email || "");
+        setPhone(u.phone || "");
+        setAge(u.age ? String(u.age) : "");
+        setWeight(u.weight ? String(u.weight) : "");
+        setDiabetesType(u.diabetesType || "type2");
+        setEmergencyContact(u.emergencyContact || "");
+        setHealthScore(u.healthScore || 85);
+        setAvatar(u.avatar || "");
+      }
+
       setIsEditing(false);
       toast.success("Profile updated successfully!");
       window.dispatchEvent(new Event("profile-updated"));
