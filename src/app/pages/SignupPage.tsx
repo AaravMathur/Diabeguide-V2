@@ -32,7 +32,7 @@ export function SignupPage() {
     try {
       const data = await api.auth.registerOtp(username, email, password);
       toast.success("OTP sent to your email!");
-      if (data.devOtp) {
+      if (data && data.devOtp) {
         toast.info(`[Dev Helper] Registration OTP: ${data.devOtp}`, { duration: 10000 });
       }
       setStep("otp");

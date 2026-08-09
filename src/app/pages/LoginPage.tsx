@@ -77,7 +77,7 @@ export function LoginPage() {
     try {
       const res = await api.auth.forgotPassword(forgotEmail);
       toast.success("OTP sent to your email!");
-      if (res.devOtp) {
+      if (res && res.devOtp) {
         toast.info(`[Dev Helper] Reset OTP: ${res.devOtp}`, { duration: 10000 });
       }
       setForgotStep(2);

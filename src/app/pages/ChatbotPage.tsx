@@ -176,9 +176,12 @@ export function ChatbotPage() {
 
     try {
       const data = await api.chatbot.sendMessage(activeSessionId, userText);
+      if (!data || !data.aiMessage) {
+        throw new Error("Invalid response from AI chatbot server");
+      }
       
       // If we started a new session, update activeSessionId to the actual mongoose ID
-      if (activeSessionId === "new") {
+      if (activeSessionId === "new" && data.sessionId) {
         setActiveSessionId(data.sessionId);
       }
       
@@ -190,9 +193,9 @@ export function ChatbotPage() {
       setIsTyping(false);
       
       // Append placeholder empty AI message
-      setMessages((prev) => [...prev, { text: "", sender: "ai", timestamp: data.aiMessage.timestamp }]);
+      setMessages((prev) => [...prev, { text: "", sender: "ai", timestamp: data.aiMessage.timestamp || new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) }]);
       
-      const fullText = data.aiMessage.text;
+      const fullText = data.aiMessage.text || "";
       let charIdx = 0;
       const speed = 15; // smooth fast speed
       const stepSize = 4; // print 4 characters at a time for lag-free rendering
