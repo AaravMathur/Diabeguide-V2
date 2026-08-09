@@ -47,23 +47,45 @@ export function DashboardHome() {
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchData = async () => {
       try {
-        const statsData = await api.readings.getStats();
-        setStats(statsData);
+        const [statsRes, trendsRes, readingsRes] = await Promise.allSettled([
+          api.readings.getStats(),
+          api.readings.getWeeklyTrends(),
+          api.readings.getAll()
+        ]);
 
-        const trendsData = await api.readings.getWeeklyTrends();
-        setWeeklyTrends(trendsData.weeklyTrends || []);
+        if (!isMounted) return;
 
-        const readingsData = await api.readings.getAll();
-        setRecentReadings(readingsData.readings || []);
+        if (statsRes.status === "fulfilled" && statsRes.value) {
+          setStats(statsRes.value);
+        }
+        if (trendsRes.status === "fulfilled" && trendsRes.value) {
+          setWeeklyTrends(trendsRes.value.weeklyTrends || []);
+        }
+        if (readingsRes.status === "fulfilled" && readingsRes.value) {
+          setRecentReadings(readingsRes.value.readings || []);
+        }
       } catch (err: any) {
         console.error("Dashboard data load error:", err);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
+
     fetchData();
+
+    // Safety fallback: guarantee loading skeleton dismisses in max 2 seconds
+    const timer = setTimeout(() => {
+      if (isMounted) setLoading(false);
+    }, 2000);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
   }, []);
 
   if (loading) {
