@@ -155,7 +155,7 @@ export const api = {
         body: JSON.stringify(profileData),
       });
       const data = await handleResponse(response);
-      if (data.user) {
+      if (data && data.user) {
         const storage = localStorage.getItem("token") ? localStorage : sessionStorage;
         storage.setItem("user", JSON.stringify(data.user));
       }

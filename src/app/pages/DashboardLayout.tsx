@@ -66,11 +66,20 @@ export function DashboardLayout() {
 
   useEffect(() => {
     const fetchUser = () => {
+      const localUserStr = localStorage.getItem("user") || sessionStorage.getItem("user");
+      if (localUserStr) {
+        try {
+          const u = JSON.parse(localUserStr);
+          if (u) setUser(u);
+        } catch (e) {}
+      }
+
       api.auth.getMe()
         .then((data) => {
-          if (data.user) {
+          if (data && data.user) {
             setUser(data.user);
-            localStorage.setItem("user", JSON.stringify(data.user));
+            const storage = localStorage.getItem("token") ? localStorage : sessionStorage;
+            storage.setItem("user", JSON.stringify(data.user));
           }
         })
         .catch((err) => {
