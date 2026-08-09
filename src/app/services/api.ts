@@ -22,9 +22,9 @@ const getApiBaseUrl = (): string => {
 
 const API_BASE_URL = getApiBaseUrl();
 
-// Client-side cache store to prevent repeated loading skeletons on navigation
+// Client-side cache disabled to guarantee 100% real-time MongoDB data
 const apiCache = new Map<string, { timestamp: number; data: any }>();
-const CACHE_TTL_MS = 3 * 60 * 1000; // 3 minutes cache lifetime
+const CACHE_TTL_MS = 0; // Always fetch fresh database records
 
 export const getCachedData = (key: string): any | null => {
   const cached = apiCache.get(key);
