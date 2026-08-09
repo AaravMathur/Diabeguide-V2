@@ -228,6 +228,13 @@ export const api = {
       });
       return await handleResponse(response);
     },
+    getDailyTrends: async () => {
+      const response = await fetch(`${API_BASE_URL}/readings/daily-trends`, {
+        method: "GET",
+        headers: getHeaders(),
+      });
+      return await handleResponse(response);
+    },
     getAnalytics: async (timeRange: "week" | "month" | "year" = "month") => {
       const response = await fetch(`${API_BASE_URL}/readings/analytics?timeRange=${timeRange}`, {
         method: "GET",

@@ -177,7 +177,7 @@ export function ProfilePage() {
               <Avatar className="w-32 h-32 relative group overflow-hidden rounded-full border border-gray-200">
                 {avatar && <AvatarImage src={avatar} className="object-cover w-full h-full" />}
                 <AvatarFallback className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-4xl">
-                  {name ? getInitials(name) : "JD"}
+                  {getInitials(name || email.split("@")[0] || "User")}
                 </AvatarFallback>
                 {isEditing && (
                   <label className="absolute inset-0 flex items-center justify-center bg-black/50 text-white cursor-pointer opacity-0 group-hover:opacity-100 transition duration-200">
@@ -187,7 +187,7 @@ export function ProfilePage() {
                 )}
               </Avatar>
             </div>
-            <CardTitle>{name || "John Doe"}</CardTitle>
+            <CardTitle>{name || (email ? email.split("@")[0] : "User Profile")}</CardTitle>
             <CardDescription>{email}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
