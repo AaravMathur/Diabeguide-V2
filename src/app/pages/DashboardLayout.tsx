@@ -30,8 +30,14 @@ export function DashboardLayout() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem("user");
-    return saved ? JSON.parse(saved) : { name: "John Doe", email: "john@example.com" };
+    const saved = localStorage.getItem("user") || sessionStorage.getItem("user");
+    if (saved && saved !== "undefined" && saved !== "null") {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === "object") return parsed;
+      } catch (e) {}
+    }
+    return { name: "Aarav Mathur", email: "aarav4mathur@gmail.com" };
   });
 
   const [notifications, setNotifications] = useState<NotificationItem[]>([
@@ -67,10 +73,10 @@ export function DashboardLayout() {
   useEffect(() => {
     const fetchUser = () => {
       const localUserStr = localStorage.getItem("user") || sessionStorage.getItem("user");
-      if (localUserStr) {
+      if (localUserStr && localUserStr !== "undefined" && localUserStr !== "null") {
         try {
           const u = JSON.parse(localUserStr);
-          if (u) setUser(u);
+          if (u && typeof u === "object") setUser(u);
         } catch (e) {}
       }
 
@@ -84,6 +90,10 @@ export function DashboardLayout() {
         })
         .catch((err) => {
           console.error("Session verification failed:", err);
+          const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+          if (!token) {
+            navigate("/login");
+          }
         });
     };
 
@@ -93,7 +103,7 @@ export function DashboardLayout() {
     return () => {
       window.removeEventListener("profile-updated", fetchUser);
     };
-  }, []);
+  }, [navigate]);
 
   // Listen for chatbot response event
   useEffect(() => {
