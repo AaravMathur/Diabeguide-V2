@@ -41,15 +41,34 @@ export function ProfilePage() {
   // 1. Fetch current profile details on mount
   useEffect(() => {
     const loadProfile = async () => {
+      // Load initial profile data from localStorage/sessionStorage instantly
+      const localUserStr = localStorage.getItem("user") || sessionStorage.getItem("user");
+      if (localUserStr) {
+        try {
+          const u = JSON.parse(localUserStr);
+          if (u) {
+            setName(u.name || "");
+            setEmail(u.email || "");
+            setPhone(u.phone || "");
+            setAge(u.age ? String(u.age) : "");
+            setWeight(u.weight ? String(u.weight) : "");
+            setDiabetesType(u.diabetesType || "type2");
+            setEmergencyContact(u.emergencyContact || "");
+            setHealthScore(u.healthScore || 85);
+            setAvatar(u.avatar || "");
+          }
+        } catch (e) {}
+      }
+
       try {
         const data = await api.auth.getMe();
-        if (data.user) {
+        if (data && data.user) {
           const u = data.user;
           setName(u.name || "");
           setEmail(u.email || "");
           setPhone(u.phone || "");
-          setAge(String(u.age || ""));
-          setWeight(String(u.weight || ""));
+          setAge(u.age ? String(u.age) : "");
+          setWeight(u.weight ? String(u.weight) : "");
           setDiabetesType(u.diabetesType || "type2");
           setEmergencyContact(u.emergencyContact || "");
           setHealthScore(u.healthScore || 85);
@@ -61,7 +80,12 @@ export function ProfilePage() {
               month: "long"
             });
             setMemberSince(dateStr);
+          } else {
+            setMemberSince("Active Member");
           }
+
+          const storage = localStorage.getItem("token") ? localStorage : sessionStorage;
+          storage.setItem("user", JSON.stringify(u));
         }
       } catch (err) {
         console.error("Failed to load user profile:", err);
@@ -98,6 +122,9 @@ export function ProfilePage() {
         setEmergencyContact(u.emergencyContact || "");
         setHealthScore(u.healthScore || 85);
         setAvatar(u.avatar || "");
+
+        const storage = localStorage.getItem("token") ? localStorage : sessionStorage;
+        storage.setItem("user", JSON.stringify(u));
       }
 
       setIsEditing(false);
@@ -113,6 +140,7 @@ export function ProfilePage() {
   };
 
   const getInitials = (fullName: string) => {
+    if (!fullName) return "U";
     return fullName
       .split(" ")
       .map((n) => n[0])
@@ -190,18 +218,21 @@ export function ProfilePage() {
         <Card className="lg:col-span-1">
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
-              <Avatar className="w-32 h-32 relative group overflow-hidden rounded-full border border-gray-200">
-                {avatar && <AvatarImage src={avatar} className="object-cover w-full h-full" />}
-                <AvatarFallback className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white text-4xl">
-                  {getInitials(name || email.split("@")[0] || "User")}
-                </AvatarFallback>
+              <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-blue-500/30 relative group shadow-md flex items-center justify-center bg-gradient-to-r from-blue-600 to-cyan-600">
+                {avatar ? (
+                  <img src={avatar} alt="Profile Avatar" className="object-cover w-full h-full" />
+                ) : (
+                  <span className="text-white text-4xl font-bold">
+                    {getInitials(name || (email ? email.split("@")[0] : "User"))}
+                  </span>
+                )}
                 {isEditing && (
-                  <label className="absolute inset-0 flex items-center justify-center bg-black/50 text-white cursor-pointer opacity-0 group-hover:opacity-100 transition duration-200">
+                  <label className="absolute inset-0 flex items-center justify-center bg-black/60 text-white cursor-pointer opacity-0 group-hover:opacity-100 transition duration-200">
                     <Camera className="w-8 h-8" />
                     <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                   </label>
                 )}
-              </Avatar>
+              </div>
             </div>
             <CardTitle>{name || (email ? email.split("@")[0] : "User Profile")}</CardTitle>
             <CardDescription>{email}</CardDescription>
