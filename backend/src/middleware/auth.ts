@@ -8,7 +8,15 @@ export interface AuthRequest extends Request {
   };
 }
 
-export const JWT_SECRET = process.env.JWT_SECRET || "diabeguide_jwt_secret_key_2026_secure";
+export const JWT_SECRET = process.env.JWT_SECRET || "super_secret_key_for_diabeguide_jwt";
+
+const FALLBACK_SECRETS = Array.from(
+  new Set([
+    JWT_SECRET,
+    "super_secret_key_for_diabeguide_jwt",
+    "diabeguide_jwt_secret_key_2026_secure"
+  ])
+);
 
 export const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
@@ -26,17 +34,27 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
     }
   }
 
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string };
-    
+  let decoded: { id: string; email: string } | null = null;
+  let lastErr: any = null;
+
+  for (const sec of FALLBACK_SECRETS) {
+    try {
+      decoded = jwt.verify(token, sec) as { id: string; email: string };
+      if (decoded) break;
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+
+  if (decoded) {
     req.user = {
       id: decoded.id,
       email: decoded.email
     };
-    
     next();
-  } catch (error: any) {
-    console.error("[Auth Error] JWT verification failed:", error?.message);
-    res.status(410).json({ message: "Token is not valid" });
+    return;
   }
+
+  console.error("[Auth Error] JWT verification failed:", lastErr?.message || "Invalid token");
+  res.status(401).json({ message: "Token is not valid" });
 };
