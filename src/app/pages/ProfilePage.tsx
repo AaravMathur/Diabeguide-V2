@@ -26,8 +26,8 @@ export function ProfilePage() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 1024 * 1024) {
-        toast.error("Image size must be less than 1MB");
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error("Image size must be less than 10MB");
         return;
       }
       const reader = new FileReader();
