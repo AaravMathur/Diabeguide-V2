@@ -1,7 +1,7 @@
 {
-  "name": "DiabeGuide - Diabetes Management",
-  "short_name": "DiabeGuide",
-  "description": "Smart full-stack diabetes tracking and health AI assistant",
+  "name": "DiabeGuide Local",
+  "short_name": "DiabeGuide Local",
+  "description": "24/7 Self-Hosted Local Diabetes Tracker & Health AI",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0f172a",
