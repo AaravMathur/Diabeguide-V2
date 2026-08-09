@@ -252,16 +252,23 @@ export const api = {
     },
   },
 
-  chat: {
+  chatbot: {
     getSessions: async () => {
-      const response = await fetch(`${API_BASE_URL}/chat/sessions`, {
+      const response = await fetch(`${API_BASE_URL}/chatbot/sessions`, {
+        method: "GET",
+        headers: getHeaders(),
+      });
+      return await handleResponse(response);
+    },
+    getSessionMessages: async (id: string) => {
+      const response = await fetch(`${API_BASE_URL}/chatbot/sessions/${id}`, {
         method: "GET",
         headers: getHeaders(),
       });
       return await handleResponse(response);
     },
     saveSession: async (session: { title: string; messages: any[] }) => {
-      const response = await fetch(`${API_BASE_URL}/chat/sessions`, {
+      const response = await fetch(`${API_BASE_URL}/chatbot/sessions`, {
         method: "POST",
         headers: getHeaders(),
         body: JSON.stringify(session),
@@ -269,17 +276,17 @@ export const api = {
       return await handleResponse(response);
     },
     deleteSession: async (id: string) => {
-      const response = await fetch(`${API_BASE_URL}/chat/sessions/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/chatbot/sessions/${id}`, {
         method: "DELETE",
         headers: getHeaders(),
       });
       return await handleResponse(response);
     },
-    sendMessage: async (message: string, history: any[] = []) => {
-      const response = await fetch(`${API_BASE_URL}/chat/message`, {
+    sendMessage: async (sessionId: string, text: string) => {
+      const response = await fetch(`${API_BASE_URL}/chatbot/sessions/${sessionId}/message`, {
         method: "POST",
         headers: getHeaders(),
-        body: JSON.stringify({ message, history }),
+        body: JSON.stringify({ text }),
       });
       return await handleResponse(response);
     },
