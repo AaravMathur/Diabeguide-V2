@@ -7,7 +7,7 @@
     "start": "node backend/dist/index.js",
     "predeploy": "pnpm run build",
     "build": "vite build",
-    "preview": "serve -s dist -l 5173",
+    "preview": "node serve_prod.js",
     "dev": "concurrently \"vite\" \"pnpm --prefix backend run dev\""
   },
   "dependencies": {
@@ -51,7 +51,6 @@
     "date-fns": "3.6.0",
     "dotenv": "^16.4.7",
     "embla-carousel-react": "8.6.0",
-    "express": "^4.21.2",
     "input-otp": "1.4.2",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "0.487.0",
@@ -78,7 +77,9 @@
     "@tailwindcss/vite": "4.1.12",
     "@vitejs/plugin-react": "4.7.0",
     "concurrently": "^10.0.3",
+    "express": "^4.22.2",
     "gh-pages": "^6.3.0",
+    "http-proxy-middleware": "^4.2.0",
     "serve": "^14.2.6",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5"

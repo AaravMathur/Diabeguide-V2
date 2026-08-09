@@ -58,7 +58,9 @@ const getCleanToken = (): string | null => {
 
 // Helper to get authorization headers
 const getHeaders = (isJson = true) => {
-  const headers: Record<string, string> = {};
+  const headers: Record<string, string> = {
+    "bypass-tunnel-reminder": "true"
+  };
   if (isJson) {
     headers["Content-Type"] = "application/json";
   }
