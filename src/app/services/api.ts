@@ -104,9 +104,11 @@ export const api = {
         body: JSON.stringify({ email, otp }),
       });
       const data = await handleResponse(response);
-      if (data.token) {
+      if (data && data.token) {
         localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        if (data.user) {
+          localStorage.setItem("user", JSON.stringify(data.user));
+        }
       }
       return data;
     },
@@ -124,9 +126,11 @@ export const api = {
         body: JSON.stringify({ email, password }),
       });
       const data = await handleResponse(response);
-      if (data.token) {
+      if (data && data.token) {
         storage.setItem("token", data.token);
-        storage.setItem("user", JSON.stringify(data.user));
+        if (data.user) {
+          storage.setItem("user", JSON.stringify(data.user));
+        }
       }
       return data;
     },
