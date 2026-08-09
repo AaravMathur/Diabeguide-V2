@@ -12,9 +12,9 @@ const getApiBaseUrl = (): string => {
   if (/^(192\.168|10\.|172\.(1[6-9]|2[0-9]|3[0-1]))\./.test(hostname)) {
     return `http://${hostname}:5000/api`;
   }
-  // Cloudflare Tunnel access (*.trycloudflare.com) - connect to PC local backend
+  // Cloudflare Tunnel access (*.trycloudflare.com)
   if (hostname.endsWith(".trycloudflare.com")) {
-    return `http://192.168.1.40:5000/api`;
+    return `${window.location.origin}/api`;
   }
   // Fallback production URL for Render deployment (GitHub Pages)
   return "https://diabeguide-backend.onrender.com/api";
