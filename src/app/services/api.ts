@@ -15,6 +15,7 @@ const getApiBaseUrl = (): string => {
   // Cloud Tunnels & custom domains (ngrok, trycloudflare, loca.lt, etc.)
   if (
     hostname.endsWith(".ngrok-free.dev") ||
+    hostname.endsWith(".ngrok-free.app") ||
     hostname.endsWith(".ngrok.io") ||
     hostname.endsWith(".trycloudflare.com") ||
     hostname.endsWith(".loca.lt") ||
@@ -22,8 +23,8 @@ const getApiBaseUrl = (): string => {
   ) {
     return `${window.location.origin}/api`;
   }
-  // Fallback production URL
-  return `${window.location.origin}/api`;
+  // Fallback production URL for live website (GitHub Pages / Render)
+  return "https://diabeguide-backend.onrender.com/api";
 };
 
 const API_BASE_URL = getApiBaseUrl();
