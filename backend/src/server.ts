@@ -23,8 +23,8 @@ const PORT = process.env.PORT || 5000;
 // Enable CORS
 app.use(cors({
   origin: "*", // Adjust origins in production
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "bypass-tunnel-reminder", "ngrok-skip-browser-warning"]
 }));
 
 // Enable JSON Body Parser with increased limit for Base64 image payloads

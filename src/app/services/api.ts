@@ -65,10 +65,17 @@ const getCleanToken = (): string | null => {
 
 // Helper to get authorization headers
 const getHeaders = (isJson = true) => {
-  const headers: Record<string, string> = {
-    "bypass-tunnel-reminder": "true",
-    "ngrok-skip-browser-warning": "true"
-  };
+  const headers: Record<string, string> = {};
+  const hostname = typeof window !== "undefined" ? window.location.hostname : "";
+
+  // Only attach tunnel-specific headers when accessing through local tunnels
+  if (hostname.endsWith(".loca.lt")) {
+    headers["bypass-tunnel-reminder"] = "true";
+  }
+  if (hostname.endsWith(".ngrok-free.dev") || hostname.endsWith(".ngrok.io") || hostname.endsWith(".ngrok-free.app")) {
+    headers["ngrok-skip-browser-warning"] = "true";
+  }
+
   if (isJson) {
     headers["Content-Type"] = "application/json";
   }
